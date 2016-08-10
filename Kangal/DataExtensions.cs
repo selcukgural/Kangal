@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 
 namespace Kangal
 {
     public static class DataExtensions
     {
-        public static int Save(this SqlConnection connection, DataTable dataTable, string tableName)
+        public static int Save(this SqlConnection connection, DataTable dataTable, string tableName, SqlTransaction transaction = null)
         {
             if (dataTable == null) throw new ArgumentException("dataTable is null");
             if (string.IsNullOrEmpty(tableName)) throw new ArgumentException("tableName is null");
@@ -17,10 +18,35 @@ namespace Kangal
             if (string.IsNullOrEmpty(query)) return 0;
 
             var command = connection.CreateCommand();
+            if (transaction != null) command.Transaction = transaction;
             command.CommandText = query;
             return command.ExecuteNonQuery();
         }
-       
+
+        //public static int Save<T>(this SqlConnection connection, IEnumerable<T> list, SqlTransaction transaction = null,string tableName = null)
+        //{
+        //    var enumerable = list as IList<T> ?? list.ToList();
+        //    if(enumerable == null || !enumerable.Any()) throw new ArgumentNullException("list");
+        //    tableName = string.IsNullOrEmpty(tableName) ? enumerable.FirstOrDefault().GetType().Name : tableName;
+        //    var columns = string.Join(",",
+        //        enumerable.FirstOrDefault().GetType().GetProperties().Select(e => "@"+e.Name));
+        //    var query = $"INSERT INTO {tableName} ({columns.Replace("@", "")}) VALUES ({columns});";
+        //    var affect = 0;
+        //    var command = connection.CreateCommand();
+        //    if (transaction != null) command.Transaction = transaction;
+
+        //    foreach (var item in enumerable)
+        //    {
+        //        command.CommandText = query;
+        //        command.Parameters.AddRange(
+        //            makeMeSqlParameters(item.GetType().GetProperties().ToArray(), item).ToArray());
+        //        affect += command.ExecuteNonQuery();
+        //        command.Parameters.Clear();
+
+        //    }
+        //    return affect;
+        //}
+
 
         public static IEnumerable<T> ToList<T>(this IDataReader reader) where T :class, new()
         {
@@ -96,9 +122,78 @@ namespace Kangal
             return tableList;
         }
 
-
-
         #region PRIVATE
+
+        #region DbTypes
+
+        private static readonly Dictionary<Type, DbType> dbTypes = new Dictionary<Type, DbType>
+                {
+                    {
+                        typeof(int), DbType.Int32
+                    },
+                    {
+                        typeof(int?), DbType.Int32
+                    },
+                    {
+                        typeof(long), DbType.Int64
+                    },
+                    {
+                        typeof(long?), DbType.Int64
+                    },
+                    {
+                        typeof(short), DbType.Int16
+                    },
+                    {
+                        typeof(short?), DbType.Int16
+                    },
+                    {
+                        typeof(string), DbType.AnsiString
+                    },
+                    {
+                        typeof(byte[]), DbType.Binary
+                    },
+                    {
+                        typeof(bool?), DbType.Boolean
+                    },
+                    {
+                        typeof(bool), DbType.Boolean
+                    },
+                    {
+                        typeof(decimal), DbType.Currency
+                    },
+                    {
+                        typeof(decimal?), DbType.Currency
+                    },
+                    {
+                        typeof(DateTime), DbType.DateTime
+                    },
+                    {
+                        typeof(DateTime?), DbType.DateTime
+                    },
+                    {
+                        typeof(char), DbType.AnsiStringFixedLength
+                    },
+                    {
+                        typeof(char?), DbType.AnsiStringFixedLength
+                    },
+                    {
+                        typeof(DateTimeOffset), DbType.DateTimeOffset
+                    },
+                    {
+                        typeof(float), DbType.Double
+                    },
+                    {
+                        typeof(float?), DbType.Double
+                    },
+                    {
+                        typeof(byte), DbType.Byte
+                    },
+                    {
+                        typeof(byte?), DbType.Byte
+                    }
+                };
+        #endregion
+
         private static string makeMeSaveQuery(DataTable dataTable, string tableName)
         {
             var columnWithValues = new Dictionary<string, object>();
@@ -137,6 +232,26 @@ namespace Kangal
                 default:
                     return value;
             }
+        }
+
+        private static IEnumerable<SqlParameter> makeMeSqlParameters(IEnumerable<PropertyInfo> propertyInfos, object item)
+        {
+            var properties = propertyInfos as IList<PropertyInfo> ?? propertyInfos.ToList();
+            if(properties == null || !properties.Any()) throw new ArgumentException("propertyInfos");
+
+            return properties.Select(property => new SqlParameter
+            {
+                DbType = getDbType(property.PropertyType),
+                Value = property.GetValue(item, null),
+                ParameterName = $@"{property.Name}"
+            }).ToList();
+        }
+
+        private static DbType getDbType(Type type)
+        {
+            DbType dbType;
+            dbTypes.TryGetValue(type, out dbType);
+            return dbType;
         }
 
         #endregion
