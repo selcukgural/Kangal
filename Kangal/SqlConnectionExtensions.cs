@@ -30,11 +30,11 @@ namespace Kangal
             var columns = string.Join(",",
                 list.First().GetType().GetProperties().Select(e => "@" + e.Name));
             var query = $"INSERT INTO {tableName} ({columns.Replace("@", "")}) VALUES ({columns});";
-            var affect = 0;
             var command = connection.CreateCommand();
             command.CommandText = query;
             if (transaction != null) command.Transaction = transaction;
 
+            var affect = 0;
             foreach (var item in list)
             {
                 command.Parameters.AddRange(

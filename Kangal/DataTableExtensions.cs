@@ -31,6 +31,7 @@ namespace Kangal
             }
             return genericList;
         }
+
         internal static string MakeMeSaveQuery(this DataTable dataTable, string tableName)
         {
             if (dataTable == null || dataTable.Rows.Count.Equals(0)) return string.Empty;
@@ -44,7 +45,7 @@ namespace Kangal
                 {
                     var columnName = dataTable.Columns[j].ColumnName;
                     var value = dataTable.Rows[i].ItemArray[j];
-                    columnWithValues.Add(columnName, setSqlValue(value));
+                    columnWithValues.Add(columnName, value.ToSqlString());
                 }
 
                 var query =
@@ -54,24 +55,6 @@ namespace Kangal
                 columnWithValues.Clear();
             }
             return string.Join("\n", queries);
-        }
-
-        private static object setSqlValue(object value)
-        {
-            if (value == DBNull.Value || value == null) return "NULL";
-            var type = value.GetType();
-            switch (type.Name)
-            {
-                case "Xml":
-                case "Char":
-                case "Guid":
-                case "String":
-                case "DateTime":
-                case "TimeSpan":
-                    return "'" + value + "'";
-                default:
-                    return value;
-            }
         }
     }
 }
