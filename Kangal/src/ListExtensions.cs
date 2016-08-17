@@ -37,13 +37,12 @@ namespace Kangal
         {
             var columnWithValues = new Dictionary<string, object>();
             var queries = new List<string>();
-            var query = string.Empty;
             foreach (var entity in entities)
             {
                 var isTableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
                 tableName = string.IsNullOrEmpty(tableName) ? getTableName(entity, isTableAtt) : tableName;
                 
-                query += $"INSERT INTO {tableName} ";
+                string query = $"INSERT INTO {tableName} ";
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
@@ -59,7 +58,6 @@ namespace Kangal
                     $"({string.Join(",", columnWithValues.Keys)}) VALUES ({string.Join(",", columnWithValues.Values)});";
                 columnWithValues.Clear();
                 queries.Add(query);
-                query = string.Empty;
             }
             return string.Join("\n", queries);
         }
