@@ -36,7 +36,7 @@ namespace ConsoleApplication1
                 //    table.Load(reader);
                 //}
                 //var list = table.ToList<Person>();
-                connection.Save(personList);
+               // connection.Save(personList);
             }
 
             
