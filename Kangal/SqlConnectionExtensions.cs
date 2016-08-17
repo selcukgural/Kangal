@@ -32,11 +32,11 @@ namespace Kangal
             var query = $"INSERT INTO {tableName} ({columns.Replace("@", "")}) VALUES ({columns});";
             var affect = 0;
             var command = connection.CreateCommand();
+            command.CommandText = query;
             if (transaction != null) command.Transaction = transaction;
 
             foreach (var item in list)
             {
-                command.CommandText = query;
                 command.Parameters.AddRange(
                     Helpers.SqlParameterHelper.CreateSqlParameters(item.GetType().GetProperties(), item));
                 affect += command.ExecuteNonQuery();
