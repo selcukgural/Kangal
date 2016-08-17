@@ -13,7 +13,6 @@ namespace Kangal
             dataTable.Load(reader);
             return dataTable.ToList<T>();
         }
-
         public static IEnumerable<DataTable> ToDataTable(this IDataReader reader)
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<DataTable>();

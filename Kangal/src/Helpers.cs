@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -21,6 +22,17 @@ namespace Kangal
                     Value = property.GetValue(item, null),
                     ParameterName = $@"{property.Name}"
                 }).ToArray();
+            }
+        }
+
+        public static class QueryHelper
+        {
+            public enum QueryType : byte
+            {
+                INSERT = 0,
+                DELETE = 1,
+                UPDATE = 2,
+                SELECT = 3
             }
         }
     }

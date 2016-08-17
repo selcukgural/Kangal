@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using Kangal;
+using Kangal.Attributes;
 
 namespace ConsoleApplication1
 {
@@ -27,16 +28,18 @@ namespace ConsoleApplication1
                 });
             }
 
+         
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
+                var aa = connection.Save(personList);
                 //using (var command = new SqlCommand(m_query, connection))
                 //{
                 //    var reader = command.ExecuteReader();
                 //    table.Load(reader);
                 //}
                 //var list = table.ToList<Person>();
-               // connection.Save(personList);
+                // connection.Save(personList);
             }
 
             
@@ -54,10 +57,15 @@ namespace ConsoleApplication1
         }
     }
 
+
     class Person
     {
+
         public string FirstName { get; set; }
+
+
         public string LastName { get; set; }
+
         public byte? Age { get; set; }
     }
 }

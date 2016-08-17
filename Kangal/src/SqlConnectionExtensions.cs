@@ -22,27 +22,16 @@ namespace Kangal
             return command.ExecuteNonQuery();
         }
 
-        public static int Save<T>(this SqlConnection connection, IEnumerable<T> list, SqlTransaction transaction = null, string tableName = null)
+        public static int Save<T>(this SqlConnection connection, IEnumerable<T> list, SqlTransaction transaction = null,string tableName = null) where  T : class 
         {
             list = list.ToList();
             if (list == null || !list.Any()) throw new ArgumentNullException(nameof(list));
-            tableName = string.IsNullOrEmpty(tableName) ? list.First().GetType().Name : tableName;
-            var columns = string.Join(",",
-                list.First().GetType().GetProperties().Select(e => "@" + e.Name));
-            var query = $"INSERT INTO {tableName} ({columns.Replace("@", "")}) VALUES ({columns});";
+
+            var query = list.MakeMeSaveQuery(tableName);
             var command = connection.CreateCommand();
             command.CommandText = query;
             if (transaction != null) command.Transaction = transaction;
-
-            var affect = 0;
-            foreach (var item in list)
-            {
-                command.Parameters.AddRange(
-                    Helpers.SqlParameterHelper.CreateSqlParameters(item.GetType().GetProperties(), item));
-                affect += command.ExecuteNonQuery();
-                command.Parameters.Clear();
-            }
-            return affect;
+            return command.ExecuteNonQuery();
         }
     }
 }

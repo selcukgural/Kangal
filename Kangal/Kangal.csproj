@@ -41,14 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataReaderExtensions.cs" />
-    <Compile Include="DataTableExtensions.cs" />
-    <Compile Include="Helpers.cs" />
-    <Compile Include="ListExtensions.cs" />
+    <Compile Include="src\attributes\Attributes.cs" />
+    <Compile Include="src\DataReaderExtensions.cs" />
+    <Compile Include="src\DataTableExtensions.cs" />
+    <Compile Include="src\Helpers.cs" />
+    <Compile Include="src\ListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlConnectionExtensions.cs" />
-    <Compile Include="ObjectExtensions.cs" />
-    <Compile Include="TypeExtensions.cs" />
+    <Compile Include="src\SqlConnectionExtensions.cs" />
+    <Compile Include="src\ObjectExtensions.cs" />
+    <Compile Include="src\TypeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
