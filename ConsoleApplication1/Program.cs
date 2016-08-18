@@ -11,35 +11,36 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        private static string m_connectionString = "Data Source=.;Initial Catalog=Test;Integrated Security=true;";
-        private static string m_query = "SELECT TOP 100 * FROM PERSON;";
+        private static string m_connectionString = "Data Source=.;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
+        private static string m_query = "SELECT TOP 20 * FROM Production.Product;";
         static void Main(string[] args)
         {
             var table = new DataTable();
             //var stopWatch = new Stopwatch();
-            var personList = new List<Person>();
-            for (int i = 0; i < 5000; i++)
-            {
-                personList.Add(new Person
-                {
-                    Age = 35,
-                    FirstName = "Selçuk "+i,
-                    LastName = "Güral "+i
-                });
-            }
+            //var personList = new List<Person>();
+            //for (int i = 0; i < 5000; i++)
+            //{
+            //    personList.Add(new Person
+            //    {
+            //        Age = 35,
+            //        FirstName = "Selçuk "+i,
+            //        LastName = "Güral "+i
+            //    });
+            //}
 
          
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
-                var aa = connection.Save(personList);
-                //using (var command = new SqlCommand(m_query, connection))
-                //{
-                //    var reader = command.ExecuteReader();
-                //    table.Load(reader);
-                //}
+                //var aa = connection.Save(personList);
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+                var xml = table.ToXml(XmlWriteMode.DiffGram,"test");
                 //var list = table.ToList<Person>();
-                // connection.Save(personList);
+                //connection.Save(personList);
             }
 
             
