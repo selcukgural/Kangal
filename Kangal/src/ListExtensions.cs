@@ -41,8 +41,6 @@ namespace Kangal
             {
                 var isTableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
                 tableName = string.IsNullOrEmpty(tableName) ? getTableName(entity, isTableAtt) : tableName;
-                
-                string query = $"INSERT INTO {tableName} ";
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
@@ -54,8 +52,8 @@ namespace Kangal
                     }
                     columnWithValues.Add(columnName, property.GetValue(entity, null).ToSqlString());
                 }
-                query +=
-                    $"({string.Join(",", columnWithValues.Keys)}) VALUES ({string.Join(",", columnWithValues.Values)});";
+                var query =
+                    $"INSERT INTO {tableName} ({string.Join(",", columnWithValues.Keys)}) VALUES ({string.Join(",", columnWithValues.Values)});";
                 columnWithValues.Clear();
                 queries.Add(query);
             }
