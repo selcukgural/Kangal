@@ -32,6 +32,28 @@ namespace Kangal
             return genericList;
         }
 
+        public static void ChangeColumnName(this DataTable dataTable, string oldName, string newName)
+        {
+            if (string.IsNullOrEmpty(oldName)) throw new ArgumentNullException(nameof(oldName));
+            if (string.IsNullOrEmpty(newName)) throw new ArgumentNullException(nameof(newName));
+
+            if(oldName.Equals(newName)) throw new ArgumentException("old and new column name the same");
+
+            var ordinal = dataTable.Columns.IndexOf(oldName);
+            if (ordinal.Equals(-1)) throw new ArgumentNullException("column not found");
+            dataTable.Columns[ordinal].ColumnName = newName;
+            dataTable.AcceptChanges();
+        }
+
+        public static void RemoveColumn(this DataTable dataTable, string columnName)
+        {
+            if(string.IsNullOrEmpty(columnName)) throw new ArgumentNullException(nameof(columnName));
+
+            var ordinal = dataTable.Columns[columnName].Ordinal;
+            if (ordinal.Equals(-1)) throw new ArgumentNullException("column not found");
+            dataTable.Columns[ordinal].ColumnName = columnName;
+            dataTable.AcceptChanges();
+        }
         internal static string MakeMeSaveQuery(this DataTable dataTable, string tableName)
         {
             if (dataTable == null || dataTable.Rows.Count.Equals(0)) return string.Empty;
