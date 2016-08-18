@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Xml.Linq;
 
 namespace Kangal
@@ -89,6 +90,11 @@ namespace Kangal
                 dataTable.WriteXml(stringWriter, xmlWriteMode, writeHierarchy);
                 return XDocument.Parse(stringWriter.ToString());
             }
+        }
+
+        public static DataTable Select(this DataTable dataTable, Expression<Func<DataColumn, bool>> selectExpression)
+        {
+            return new DataTable();
         }
         internal static string MakeMeSaveQuery(this DataTable dataTable, string tableName)
         {

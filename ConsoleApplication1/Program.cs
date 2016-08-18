@@ -38,7 +38,7 @@ namespace ConsoleApplication1
                     var reader = command.ExecuteReader();
                     table.Load(reader);
                 }
-                var xml = table.ToXml(XmlWriteMode.DiffGram,"test");
+                var xml = table.Select(e=> e.ColumnName == "TEst" && e.)
                 //var list = table.ToList<Person>();
                 //connection.Save(personList);
             }
