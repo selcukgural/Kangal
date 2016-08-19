@@ -11,8 +11,8 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        private static string m_connectionString = "Data Source=.;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
-        private static string m_query = "SELECT TOP 20 * FROM Production.Product;";
+        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
+        private static string m_query = "SELECT * FROM Person.Person;";
         static void Main(string[] args)
         {
             var table = new DataTable();
@@ -38,7 +38,9 @@ namespace ConsoleApplication1
                     var reader = command.ExecuteReader();
                     table.Load(reader);
                 }
-                var xml = table.Select(e=> e.ColumnName == "TEst" && e.)
+
+                var json = table.ToJson();
+
                 //var list = table.ToList<Person>();
                 //connection.Save(personList);
             }

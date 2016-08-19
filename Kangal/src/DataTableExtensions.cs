@@ -4,6 +4,8 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Web.Script.Serialization;
 using System.Xml.Linq;
 
 namespace Kangal
@@ -92,9 +94,33 @@ namespace Kangal
             }
         }
 
-        public static DataTable Select(this DataTable dataTable, Expression<Func<DataColumn, bool>> selectExpression)
+        public static string ToJson(this DataTable dataTable,bool format = true)
         {
-            return new DataTable();
+            var columnCounter = 0;
+
+            var builder = new StringBuilder();
+            builder.Append("[");
+
+            for (var i = 0; i < dataTable.Rows.Count; i++)
+            {
+                if (format) builder.Append(Environment.NewLine).Append("  ");
+                builder.Append("{");
+                if (format) builder.Append(Environment.NewLine).Append("    ");
+                for (var j = 0; j < dataTable.Columns.Count; j++)
+                {
+                    builder.Append($@"""{dataTable.Columns[j]}"": ""{dataTable.Rows[i][j]}"",");
+                    columnCounter++;
+                    if (columnCounter == dataTable.Columns.Count) builder.Remove(builder.Length - 1, 1);
+                    if (format) builder.Append(Environment.NewLine).Append("    ");
+                }
+                columnCounter = 0;
+                if (format) builder.Remove(builder.Length - 2, 2);
+                builder.Append("},");
+            }
+            builder.Remove(builder.Length - 1, 1);
+            if (format) builder.Append(Environment.NewLine);
+            builder.Append("]");
+            return builder.ToString();
         }
         internal static string MakeMeSaveQuery(this DataTable dataTable, string tableName)
         {
