@@ -13,7 +13,6 @@ namespace ConsoleApplication1
     class Program
     {
         private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=Test;Integrated Security=true;";
-        //private static string m_connectionString = @"Data Source=92.42.39.232;Initial Catalog=Corm_Master;User Id=sa;Password=xPeria8;";
         private static string m_query = "select * from Person;";
         static void Main(string[] args)
         {
