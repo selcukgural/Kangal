@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
-using System.Web.Script.Serialization;
 using System.Xml.Linq;
+using Kangal.Attributes;
 
 namespace Kangal
 {
@@ -22,15 +21,33 @@ namespace Kangal
             for (var i = 0; i < dataTable.Rows.Count; i++)
             {
                 var generic = new T();
+
                 for (var j = 0; j < dataTable.Columns.Count; j++)
                 {
                     var columnName = dataTable.Columns[j].ColumnName;
+                    if (string.IsNullOrEmpty(columnName)) continue;
                     var value = dataTable.Rows[i].ItemArray[j];
-                    var property =
-                        generic.GetType()
-                            .GetProperties()
-                            .FirstOrDefault(e => e.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
-                    property?.SetValue(generic, value == DBNull.Value ? null : value, null);
+
+                    foreach (var property in generic.GetType().GetProperties())
+                    {
+                        var columnAliasAttribute =
+                            property.GetCustomAttributes(typeof(ColumnAliasAttribute), false)
+                                .Cast<ColumnAliasAttribute>()
+                                .FirstOrDefault(e => e.Alias.Equals(columnName));
+
+                        if (columnAliasAttribute != null)
+                        {
+                            property.SetValue(generic, value == DBNull.Value ? null : value);
+                            break;
+                        }
+                        var prop =
+                            generic.GetType()
+                                .GetProperties()
+                                .FirstOrDefault(e => e.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
+                        if (prop == null || !prop.Name.Equals(columnName)) continue;
+                        prop.SetValue(generic, value == DBNull.Value ? null : value);
+                        break;
+                    }
                 }
                 genericList.Add(generic);
             }
@@ -94,7 +111,7 @@ namespace Kangal
             }
         }
 
-        public static string ToJson(this DataTable dataTable,bool format = true)
+        public static string ToJson(this DataTable dataTable,JsonFormat jsonFormat = JsonFormat.Simple,JsonFormatSettings jsonFormatSettings = null)
         {
             var columnCounter = 0;
 
@@ -103,25 +120,77 @@ namespace Kangal
 
             for (var i = 0; i < dataTable.Rows.Count; i++)
             {
-                if (format) builder.Append(Environment.NewLine).Append("  ");
+                if (jsonFormat == JsonFormat.Showy) builder.AppendLine().Append("  ");
                 builder.Append("{");
-                if (format) builder.Append(Environment.NewLine).Append("    ");
+                if (jsonFormat == JsonFormat.Showy) builder.AppendLine().Append("    ");
                 for (var j = 0; j < dataTable.Columns.Count; j++)
                 {
-                    builder.Append($@"""{dataTable.Columns[j]}"": ""{dataTable.Rows[i][j]}"",");
+                    builder.Append($@"""{dataTable.Columns[j]}"":{setJsonValueWithFormat(dataTable.Rows[i][j],jsonFormatSettings)},");
                     columnCounter++;
                     if (columnCounter == dataTable.Columns.Count) builder.Remove(builder.Length - 1, 1);
-                    if (format) builder.Append(Environment.NewLine).Append("    ");
+                    if (jsonFormat == JsonFormat.Showy) builder.AppendLine().Append("    ");
                 }
                 columnCounter = 0;
-                if (format) builder.Remove(builder.Length - 2, 2);
+                if (jsonFormat == JsonFormat.Showy) builder.Remove(builder.Length - 2, 2);
                 builder.Append("},");
             }
             builder.Remove(builder.Length - 1, 1);
-            if (format) builder.Append(Environment.NewLine);
+            if (jsonFormat == JsonFormat.Showy) builder.AppendLine();
             builder.Append("]");
             return builder.ToString();
         }
+
+        private static string setJsonValueWithFormat(object value,JsonFormatSettings jsonFormatSettings)
+        {
+
+            if (value == null || value == DBNull.Value) return "null";
+
+            var typeName = value.GetType().Name;
+            switch (typeName)
+            {
+                case "Boolean":
+                    return value.ToString().ToLower();
+                case "DateTime":
+                    return string.IsNullOrEmpty(jsonFormatSettings?.DateTimeFormat) ? $@"""{DateTime.Parse(value.ToString()).ToLocalTime()}""" : $@"""{DateTime.Parse(value.ToString()).ToString(jsonFormatSettings.DateTimeFormat)}""";
+                case "Decimal":
+                    return string.IsNullOrEmpty(jsonFormatSettings?.DecimalFormat)
+                        ? value.ToString().Replace(",", ".")
+                        : decimal.Parse(value.ToString()).ToString(jsonFormatSettings.DecimalFormat);
+                case "Double":
+                    return string.IsNullOrEmpty(jsonFormatSettings?.DoubleFormat)
+                        ? value.ToString().Replace(",",".")
+                        : double.Parse(value.ToString()).ToString(jsonFormatSettings.DoubleFormat);
+                case "SqlHierarchyId":
+                    var sqlHierarchyId = value.ToString();
+                    return sqlHierarchyId.Equals("NULL") ? $@"{"{\n      IsNull:true\n  }"}" : $@"{"{\n      IsNull:false\n  }"}";
+                case "Int32":
+                case "Int64":
+                case "Int16":
+                case "Byte":
+                case "Single":
+                    return value.ToString();
+                case "String":
+                case "Char":
+                case "Date":
+                case "Guid":
+                case "TimeSpan":
+                case "DateTime2":
+                case "DateTimeOffset":
+                case "Xml":
+                    return $@"""{value
+                        .ToString()
+                        .Replace("\\", "\\\\")
+                        .Replace(@"""", @"\""")
+                        .Replace("\r", "\\r")
+                        .Replace("\n", "\\n")
+                        .Replace(@"\d", "\\d")
+                        .Replace("\t","\\t")}""";
+                default:
+                     throw new ArgumentException($"{typeName} data type not support yet");
+
+            }
+        }
+
         internal static string MakeMeSaveQuery(this DataTable dataTable, string tableName)
         {
             if (dataTable == null || dataTable.Rows.Count.Equals(0)) return string.Empty;

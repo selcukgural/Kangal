@@ -17,8 +17,10 @@ namespace Kangal
                 case "DateTime":
                 case "TimeSpan":
                     return "'" + value + "'";
+                case "Boolean":
+                    return (bool) value ? 1 : 0;
                 default:
-                    return value;
+                    return value;                  
             }
         }
     }

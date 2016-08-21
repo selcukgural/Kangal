@@ -39,13 +39,13 @@ namespace Kangal
             var queries = new List<string>();
             foreach (var entity in entities)
             {
-                var isTableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
-                tableName = string.IsNullOrEmpty(tableName) ? getTableName(entity, isTableAtt) : tableName;
+                var tableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
+                tableName = string.IsNullOrEmpty(tableName) ? getTableName(entity, tableAtt) : tableName;
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
-                    var isColumnAtt = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
-                    var columnName = string.IsNullOrEmpty(isColumnAtt?.Alias) ? property.Name : isColumnAtt.Alias;
+                    var columnAtt = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
+                    var columnName = string.IsNullOrEmpty(columnAtt?.Alias) ? property.Name : columnAtt.Alias;
                     if (columnWithValues.ContainsKey(columnName))
                     {
                         throw new ArgumentException($"This column name already exists: {columnName}");

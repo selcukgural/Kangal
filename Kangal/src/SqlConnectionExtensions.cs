@@ -22,6 +22,11 @@ namespace Kangal
             return command.ExecuteNonQuery();
         }
 
+        public static int Save<T>(this SqlConnection connection, T entity, SqlTransaction transaction = null, string tableName = null) where T : class
+        {
+            var list = new List<T>() {entity};
+            return Save(connection, list: list, transaction: transaction, tableName: tableName);
+        }
         public static int Save<T>(this SqlConnection connection, IEnumerable<T> list, SqlTransaction transaction = null,string tableName = null) where  T : class 
         {
             list = list.ToList();

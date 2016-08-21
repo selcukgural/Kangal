@@ -6,43 +6,52 @@ using System.Diagnostics;
 using System.Linq;
 using Kangal;
 using Kangal.Attributes;
+using Newtonsoft.Json;
 
 namespace ConsoleApplication1
 {
     class Program
     {
-        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
-        private static string m_query = "SELECT * FROM Person.Person;";
+        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=Test;Integrated Security=true;";
+        //private static string m_connectionString = @"Data Source=92.42.39.232;Initial Catalog=Corm_Master;User Id=sa;Password=xPeria8;";
+        private static string m_query = "select * from Person;";
         static void Main(string[] args)
         {
             var table = new DataTable();
-            //var stopWatch = new Stopwatch();
-            //var personList = new List<Person>();
-            //for (int i = 0; i < 5000; i++)
-            //{
-            //    personList.Add(new Person
-            //    {
-            //        Age = 35,
-            //        FirstName = "Selçuk "+i,
-            //        LastName = "Güral "+i
-            //    });
-            //}
+            var stopWatch = new Stopwatch();
+            var personList = new List<Person>();
+            for (int i = 0; i < 5000; i++)
+            {
+                personList.Add(new Person
+                {
+                    Age = 35,
+                    Name = "Selçuk " + i,
+                    Surname = "Güral " + i
+                });
+            }
 
-         
+
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
-                //var aa = connection.Save(personList);
-                using (var command = new SqlCommand(m_query, connection))
-                {
-                    var reader = command.ExecuteReader();
-                    table.Load(reader);
-                }
-
-                var json = table.ToJson();
-
+                var aa = connection.Save(personList.FirstOrDefault());
+                //using (var command = new SqlCommand(m_query, connection))
+                //{
+                //    var personList = command.ExecuteReader().ToList<Person>();
+                //    table.Load(reader);
+                //}
+                //stopWatch.Start();
+                //var newton = JsonConvert.SerializeObject(table,Formatting.Indented);
+                //stopWatch.Stop();
+                //Console.WriteLine(stopWatch.ElapsedMilliseconds+ " newton");
+                //stopWatch.Reset();
+                //stopWatch.Start();
+                //var json = table.ToJson(JsonFormat.Showy);
+                //stopWatch.Stop();
+                //Console.WriteLine(stopWatch.ElapsedMilliseconds + " benim");
                 //var list = table.ToList<Person>();
                 //connection.Save(personList);
+                Console.ReadKey();
             }
 
             
@@ -63,11 +72,11 @@ namespace ConsoleApplication1
 
     class Person
     {
+        [ColumnAlias("FirstName")]
+        public string Name { get; set; }
 
-        public string FirstName { get; set; }
-
-
-        public string LastName { get; set; }
+        [ColumnAlias("LastName")]
+        public string Surname { get; set; }
 
         public byte? Age { get; set; }
     }
