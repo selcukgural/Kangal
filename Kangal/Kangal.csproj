@@ -46,15 +46,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\attributes\Attributes.cs" />
-    <Compile Include="src\DataReaderExtensions.cs" />
-    <Compile Include="src\DataTableExtensions.cs" />
+    <Compile Include="src\extensions\DataReaderExtensions.cs" />
+    <Compile Include="src\extensions\DataTableExtensions.cs" />
     <Compile Include="src\Helpers.cs" />
     <Compile Include="src\JsonFormatSettings.cs" />
-    <Compile Include="src\ListExtensions.cs" />
+    <Compile Include="src\extensions\ListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\SqlConnectionExtensions.cs" />
-    <Compile Include="src\ObjectExtensions.cs" />
-    <Compile Include="src\TypeExtensions.cs" />
+    <Compile Include="src\extensions\SqlConnectionExtensions.cs" />
+    <Compile Include="src\extensions\ObjectExtensions.cs" />
+    <Compile Include="src\extensions\TypeExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
