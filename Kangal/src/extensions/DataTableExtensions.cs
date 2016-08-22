@@ -37,7 +37,8 @@ namespace Kangal
 
                         if (columnAliasAttribute != null)
                         {
-                            property.SetValue(generic, value == DBNull.Value ? null : value);
+                            var propetyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                            property.SetValue(generic, (value == null || value == DBNull.Value) ? null : Convert.ChangeType(value, propetyType),null);
                             break;
                         }
                         var prop =
@@ -45,7 +46,8 @@ namespace Kangal
                                 .GetProperties()
                                 .FirstOrDefault(e => e.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
                         if (prop == null || !prop.Name.Equals(columnName)) continue;
-                        prop.SetValue(generic, value == DBNull.Value ? null : value);
+                        var propType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                        prop.SetValue(generic, (value == null || value == DBNull.Value) ? null : Convert.ChangeType(value, propType),null);
                         break;
                     }
                 }
