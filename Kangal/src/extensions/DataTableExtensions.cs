@@ -115,10 +115,10 @@ namespace Kangal
 
         public static string ToJson(this DataTable dataTable,JsonFormat jsonFormat = JsonFormat.Simple,JsonFormatSettings jsonFormatSettings = null)
         {
-            var columnCounter = 0;
-
             var builder = new StringBuilder();
             builder.Append("[");
+
+            var columnCounter = 0;
 
             for (var i = 0; i < dataTable.Rows.Count; i++)
             {
@@ -127,7 +127,7 @@ namespace Kangal
                 if (jsonFormat == JsonFormat.Showy) builder.AppendLine().Append("    ");
                 for (var j = 0; j < dataTable.Columns.Count; j++)
                 {
-                    builder.Append($@"""{dataTable.Columns[j]}"":{setJsonValueWithFormat(dataTable.Rows[i][j],jsonFormatSettings)},");
+                    builder.Append($@"""{dataTable.Columns[j]}"":{setJsonValueWithFormat(dataTable.Rows[i][j],jsonFormatSettings,jsonFormat)},");
                     columnCounter++;
                     if (columnCounter == dataTable.Columns.Count) builder.Remove(builder.Length - 1, 1);
                     if (jsonFormat == JsonFormat.Showy) builder.AppendLine().Append("    ");
@@ -142,7 +142,7 @@ namespace Kangal
             return builder.ToString();
         }
 
-        private static string setJsonValueWithFormat(object value,JsonFormatSettings jsonFormatSettings)
+        private static string setJsonValueWithFormat(object value,JsonFormatSettings jsonFormatSettings,JsonFormat jsonFormat)
         {
 
             if (value == null || value == DBNull.Value) return "null";
@@ -164,7 +164,24 @@ namespace Kangal
                         : double.Parse(value.ToString()).ToString(jsonFormatSettings.DoubleFormat);
                 case "SqlHierarchyId":
                     var sqlHierarchyId = value.ToString();
-                    return sqlHierarchyId.Equals("NULL") ? $@"{"{\n      IsNull:true\n  }"}" : $@"{"{\n      IsNull:false\n  }"}";
+                    var builder = new StringBuilder();
+                    if (jsonFormat == JsonFormat.Showy)
+                    {
+                        return sqlHierarchyId.Equals("NULL")
+                            ? builder.AppendLine("{")
+                                .Append("      ")
+                                .AppendLine(@"""IsNull"":true")
+                                .Append("  }")
+                                .ToString()
+                            : builder.AppendLine("{")
+                                .Append("      ")
+                                .AppendLine(@"""IsNull"":false")
+                                .Append("  }")
+                                .ToString();
+                    }
+                    return sqlHierarchyId.Equals("NULL")
+                        ? builder.Append(@"{""IsNull"":true}").ToString()
+                        : builder.Append(@"{""IsNull"":false}").ToString();
                 case "Int32":
                 case "Int64":
                 case "Int16":
@@ -186,7 +203,9 @@ namespace Kangal
                         .Replace("\r", "\\r")
                         .Replace("\n", "\\n")
                         .Replace(@"\d", "\\d")
-                        .Replace("\t","\\t")}""";
+                        .Replace("\t","\\t")
+                        .Replace("\f","\\f")
+                        .Replace(@"\u","\\u")}""";
                 default:
                      throw new ArgumentException($"{typeName} data type not support yet");
 

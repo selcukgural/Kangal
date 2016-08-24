@@ -12,40 +12,40 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=Test;Integrated Security=true;";
-        private static string m_query = "select * from Person;";
+        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
+        private static string m_query = "select top 5 * from Sales.SalesPersonQuotaHistory;";
         static void Main(string[] args)
         {
             var table = new DataTable();
-            var stopWatch = new Stopwatch();
-            var personList = new List<Person>();
-            for (int i = 0; i < 5000; i++)
-            {
-                personList.Add(new Person
-                {
-                    Age = 35,
-                    Name = "Selçuk " + i,
-                    Surname = "Güral " + i
-                });
-            }
+            //var stopWatch = new Stopwatch();
+            //var personList = new List<Person>();
+            //for (int i = 0; i < 5000; i++)
+            //{
+            //    personList.Add(new Person
+            //    {
+            //        Age = 35,
+            //        Name = "Selçuk " + i,
+            //        Surname = "Güral " + i
+            //    });
+            //}
 
 
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
-                var aa = connection.Save(personList.FirstOrDefault());
-                //using (var command = new SqlCommand(m_query, connection))
-                //{
-                //    var personList = command.ExecuteReader().ToList<Person>();
-                //    table.Load(reader);
-                //}
+                //var aa = connection.Save(personList.FirstOrDefault());
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
                 //stopWatch.Start();
                 //var newton = JsonConvert.SerializeObject(table,Formatting.Indented);
                 //stopWatch.Stop();
                 //Console.WriteLine(stopWatch.ElapsedMilliseconds+ " newton");
                 //stopWatch.Reset();
                 //stopWatch.Start();
-                //var json = table.ToJson(JsonFormat.Showy);
+                var json = table.ToJson(JsonFormat.Showy);
                 //stopWatch.Stop();
                 //Console.WriteLine(stopWatch.ElapsedMilliseconds + " benim");
                 //var list = table.ToList<Person>();

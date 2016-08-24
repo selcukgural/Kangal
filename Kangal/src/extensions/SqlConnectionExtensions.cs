@@ -16,10 +16,12 @@ namespace Kangal
             var query = dataTable.MakeMeSaveQuery(tableName);
             if (string.IsNullOrEmpty(query)) return 0;
 
-            var command = connection.CreateCommand();
-            if (transaction != null) command.Transaction = transaction;
-            command.CommandText = query;
-            return command.ExecuteNonQuery();
+            using (var command = connection.CreateCommand())
+            {
+                if (transaction != null) command.Transaction = transaction;
+                command.CommandText = query;
+                return command.ExecuteNonQuery();
+            }
         }
 
         public static int Save<T>(this SqlConnection connection, T entity, SqlTransaction transaction = null, string tableName = null) where T : class
@@ -33,10 +35,12 @@ namespace Kangal
             if (list == null || !list.Any()) throw new ArgumentNullException(nameof(list));
 
             var query = list.MakeMeSaveQuery(tableName);
-            var command = connection.CreateCommand();
-            command.CommandText = query;
-            if (transaction != null) command.Transaction = transaction;
-            return command.ExecuteNonQuery();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                if (transaction != null) command.Transaction = transaction;
+                return command.ExecuteNonQuery();
+            }
         }
     }
 }

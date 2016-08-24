@@ -32,8 +32,7 @@ namespace Kangal
             }
             return dataTable;
         }
-
-        internal static string MakeMeSaveQuery<T>(this IEnumerable<T> entities,string tableName = null) where T : class
+        internal static string MakeMeSaveQuery<T>(this IEnumerable<T> entities, string tableName = null) where T : class
         {
             var columnWithValues = new Dictionary<string, object>();
             var queries = new List<string>();
