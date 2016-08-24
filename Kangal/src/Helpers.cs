@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using Kangal.Attributes;
 
 namespace Kangal
 {
@@ -21,6 +22,16 @@ namespace Kangal
                     Value = property.GetValue(item, null),
                     ParameterName = $@"{property.Name}"
                 }).ToArray();
+            }
+        }
+
+        public static class TableNameHelper
+        {
+            internal static string GetTableName(object entity,TableNameAttribute tableNameAttribute = null)
+            {
+                return string.IsNullOrEmpty(tableNameAttribute?.Name)
+                    ? entity.GetType().Name
+                    : tableNameAttribute.Name;
             }
         }
     }

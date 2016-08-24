@@ -42,5 +42,16 @@ namespace Kangal
                 return command.ExecuteNonQuery();
             }
         }
+
+        public static IEnumerable<T> Get<T>(this SqlConnection connection,string query) where T : class ,new ()
+        {
+            if (string.IsNullOrEmpty(query)) throw new ArgumentNullException(nameof(query));
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = query;
+                var reader = command.ExecuteReader();
+                return reader.ToList<T>();
+            }
+        }
     }
 }

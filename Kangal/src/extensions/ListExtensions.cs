@@ -39,7 +39,7 @@ namespace Kangal
             foreach (var entity in entities)
             {
                 var tableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
-                tableName = string.IsNullOrEmpty(tableName) ? getTableName(entity, tableAtt) : tableName;
+                tableName = string.IsNullOrEmpty(tableName) ? Helpers.TableNameHelper.GetTableName(entity, tableAtt) : tableName;
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
@@ -57,14 +57,6 @@ namespace Kangal
                 queries.Add(query);
             }
             return string.Join("\n", queries);
-        }
-
-        private static string getTableName(object entity,
-            TableNameAttribute tableNameAttribute = null)
-        {
-            return string.IsNullOrEmpty(tableNameAttribute?.Name)
-                ? entity.GetType().Name
-                : tableNameAttribute.Name;
         }
     }
 }

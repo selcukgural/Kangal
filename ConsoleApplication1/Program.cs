@@ -12,7 +12,7 @@ namespace ConsoleApplication1
 {
     class Program
     {
-        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
+        private static string m_connectionString = @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=Test;Integrated Security=true;";
         private static string m_query = "select top 5 * from Sales.SalesPersonQuotaHistory;";
         static void Main(string[] args)
         {
@@ -33,12 +33,12 @@ namespace ConsoleApplication1
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
-                //var aa = connection.Save(personList.FirstOrDefault());
-                using (var command = new SqlCommand(m_query, connection))
-                {
-                    var reader = command.ExecuteReader();
-                    table.Load(reader);
-                }
+                var aa = connection.Get<Person>("select * from Person");
+                //using (var command = new SqlCommand(m_query, connection))
+                //{
+                //    var reader = command.ExecuteReader();
+                //    table.Load(reader);
+                //}
                 //stopWatch.Start();
                 //var newton = JsonConvert.SerializeObject(table,Formatting.Indented);
                 //stopWatch.Stop();
