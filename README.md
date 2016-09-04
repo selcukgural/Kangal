@@ -21,10 +21,10 @@ Bir DataTable nesnesini Json formatında geriye döndürür.
                     var reader = command.ExecuteReader();
                     table.Load(reader);
                 }
-                var json = table.ToJson(JsonFormat.Showy);
-                Console.WriteLine(json);
-                Console.ReadKey();
             }
+             var json = table.ToJson(JsonFormat.Showy);
+             Console.WriteLine(json);
+             Console.ReadKey();
         }
 ```
 Parametre olarak JsonFormat ve JsonFormatSettings tipinde değerler alır.
@@ -67,11 +67,11 @@ DataTable nesnesini bir class a map etmenizi sağlar.
                     var reader = command.ExecuteReader();
                     table.Load(reader);
                 }
-                var persons = table.ToList<Person>();
-                foreach (var person in persons)
-                {
-                    Console.WriteLine(person.Name+" "+person.Surname);
-                }
+            }
+            var persons = table.ToList<Person>();
+            foreach (var person in persons)
+            {       
+                Console.WriteLine(person.Name+" "+person.Surname);
             }
             Console.ReadKey();
         }
