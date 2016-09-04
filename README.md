@@ -6,6 +6,7 @@ Hemen hemen her projede kullanmak durumunda kaldığım kendimce yararlı olduğ
 #####ToJson()
 Bir DataTable nesnesini Json formatında geriye döndürür.
 ```csharp
+        //AdventureWorks2014
         private static readonly string m_query = "select top 5 * from Person.Person;";
 
         static void Main(string[] args)
@@ -35,9 +36,43 @@ Parametre olarak JsonFormat ve JsonFormatSettings tipinde değerler alır.
     }
     
     public JsonFormatSettings() { }
+    //İle Tarih, decimal ve double formatları için default değer verilebilir.
 ```
 
-İle Tarih, decimal ve double formatları için default değer verilebilir.
-
 #####ToList<T>()
-DataTable nesnesini 
+DataTable nesnesini bir class a map etmenizi sağlar.
+```csharp
+    class Person
+    {
+        [ColumnAlias("FirstName")] //maplenen property
+        public string Name { get; set; }
+
+        [ColumnAlias("LastName")] //maplenen property
+        public string Surname { get; set; }
+
+        public byte? Age { get; set; }
+    }
+    
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+
+        static void Main(string[] args)
+        {
+            var table = new DataTable();
+
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+                var persons = table.ToList<Person>();
+                foreach (var person in persons)
+                {
+                    Console.WriteLine(person.Name);
+                }
+            }
+            Console.ReadKey();
+        }
+```
