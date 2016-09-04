@@ -20,7 +20,9 @@ namespace Kangal
             var properties = firstOrDefault.GetType().GetProperties();
             foreach (var property in properties)
             {
-                var column = new DataColumn(property.Name,
+                var columnAlias = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
+                var propertyName = columnAlias?.Alias ?? property.Name;
+                var column = new DataColumn(propertyName,
                     property.PropertyType.Name.Contains("Nullable") ? typeof(object) : property.PropertyType);
                 dataTable.Columns.Add(column);
             }
