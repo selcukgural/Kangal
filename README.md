@@ -214,4 +214,36 @@ DataReader dan dönen result setleri DataTable lara yükler ve geriye IEnumerabl
 ###List<T>
 
 #####ToDataTable<T>()
-Generic bir listeyi geriye DataTable olarak döner.
+Generic bir listeyi geriye DataTable olarak döner. ColumnAlias Attribute sayesinde property name hariçinde farklı bir isim ile datatable da kolon yaratılabilir.
+
+```csharp
+    class Person
+    {
+        [ColumnAlias("FirstName")] //maplenen property
+        public string Name { get; set; }
+
+        [ColumnAlias("LastName")] //maplenen property
+        public string Surname { get; set; }
+
+        public byte? Age { get; set; }
+    }
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+        static void Main(string[] args)
+        {
+            DataTable personTable;
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    personTable = command.ExecuteReader().ToList<Person>().ToDataTable();
+                }
+            }
+            Console.WriteLine(personTable.Rows.Count);
+            Console.ReadKey();
+        }
+```
+
+###SqlConnection
+
+#####Save(this SqlConnection connection, DataTable dataTable, string tableName, SqlTransaction transaction = null)
