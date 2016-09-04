@@ -70,7 +70,7 @@ DataTable nesnesini bir class a map etmenizi sağlar.
                 var persons = table.ToList<Person>();
                 foreach (var person in persons)
                 {
-                    Console.WriteLine(person.Name);
+                    Console.WriteLine(person.Name+" "+person.Surname);
                 }
             }
             Console.ReadKey();
