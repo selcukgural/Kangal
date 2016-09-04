@@ -76,3 +76,91 @@ DataTable nesnesini bir class a map etmenizi sağlar.
             Console.ReadKey();
         }
 ```
+
+#####ChangeColumnName()
+Mevcut bir kolonun adını değiştirir.
+
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+
+        static void Main(string[] args)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+            }
+            table.ChangeColumnName("FirstName","Name");
+            Console.ReadKey();
+        }
+```
+#####RemoveColumn()
+Mevcut kolonu siler.
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+
+        static void Main(string[] args)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+            }
+            table.RemoveColumn("Title");
+            Console.ReadKey();
+        }
+```
+#####ToCsv()
+DataTable içeriğini Csv formatında geriye döner.
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+
+        static void Main(string[] args)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+            }
+            var csv = table.ToCsv();
+            Console.WriteLine(csv);
+            Console.ReadKey();
+        }
+```
+#####ToXDocument()
+DataTable içeriğini XDocument formatında geriye döner.
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+
+        static void Main(string[] args)
+        {
+            var table = new DataTable();
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    var reader = command.ExecuteReader();
+                    table.Load(reader);
+                }
+            }
+            var csv = table.ToXDocument();
+            Console.WriteLine(csv.ToString());
+            Console.ReadKey();
+        }
+```
