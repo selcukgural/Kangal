@@ -3,6 +3,7 @@
 Hemen hemen her projede kullanmak durumunda kaldığım kendimce yararlı olduğunu düşündüğüm Extension methodlarını paylaşmak istiyorum...
 
 ###DataTable
+
 #####ToJson()
 Bir DataTable nesnesini Json formatında geriye döndürür.
 ```csharp
@@ -161,6 +162,50 @@ DataTable içeriğini XDocument formatında geriye döner.
             }
             var csv = table.ToXDocument();
             Console.WriteLine(csv.ToString());
+            Console.ReadKey();
+        }
+```
+###DataReader
+
+#####ToList<T>()
+DataReader nesnesini class a map eder ve geriye IEnumerable<T> döner.
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;";
+        static void Main(string[] args)
+        {
+            IEnumerable<Person> persons;
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    persons = command.ExecuteReader().ToList<Person>();
+                }
+            }
+            foreach (var person in persons)
+            {
+                Console.WriteLine(person.Name+" "+person.Surname);
+            }
+            Console.ReadKey();
+        }
+```
+
+#####ToDataTable()
+DataReader dan dönen result setleri DataTable lara yükler ve geriye IEnumerable<DataTable> döner.
+```csharp
+        private static readonly string m_query = "select top 5 * from Person.Person;select top 5 * from Person.Address;";
+        static void Main(string[] args)
+        {
+            IEnumerable<DataTable> dataTables;
+            using (var connection = new SqlConnection(m_connectionString))
+            {
+                connection.Open();
+                using (var command = new SqlCommand(m_query, connection))
+                {
+                    dataTables = command.ExecuteReader().ToDataTable();
+                }
+            }
+            Console.WriteLine($"DataTable count : {dataTables.Count()}");
             Console.ReadKey();
         }
 ```
