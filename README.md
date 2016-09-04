@@ -2,6 +2,8 @@
 
 Hemen hemen her projede kullanmak durumunda kaldığım kendimce yararlı olduğunu düşündüğüm Extension methodlarını paylaşmak istiyorum...
 
+Projenin başka bir kütüphaneye bağımlılığı yoktur.
+
 ###DataTable
 
 #####ToJson()
@@ -209,3 +211,7 @@ DataReader dan dönen result setleri DataTable lara yükler ve geriye IEnumerabl
             Console.ReadKey();
         }
 ```
+###List<T>
+
+#####ToDataTable<T>()
+Generic bir listeyi geriye DataTable olarak döner.
