@@ -102,7 +102,7 @@ namespace Kangal
             return string.Join("\n", cvsList);
         }
 
-        public static XDocument ToXml(this DataTable dataTable,XmlWriteMode xmlWriteMode = XmlWriteMode.IgnoreSchema,string nodeName = null,bool writeHierarchy = true)
+        public static XDocument ToXDocument(this DataTable dataTable,XmlWriteMode xmlWriteMode = XmlWriteMode.IgnoreSchema,string nodeName = null,bool writeHierarchy = true)
         {
             if (dataTable == null || dataTable.Rows.Count == 0) throw new ArgumentNullException(nameof(dataTable), "DataTable is null");
             dataTable.TableName  = string.IsNullOrEmpty(nodeName) ? "main" : nodeName;
