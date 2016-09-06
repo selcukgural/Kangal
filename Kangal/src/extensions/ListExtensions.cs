@@ -45,6 +45,8 @@ namespace Kangal
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
+                    var ignoreAtt = (IgnoreAttribute)property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
+                    if(ignoreAtt != null) continue;
                     var columnAtt = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
                     var columnName = string.IsNullOrEmpty(columnAtt?.Alias) ? property.Name : columnAtt.Alias;
                     if (columnWithValues.ContainsKey(columnName))
