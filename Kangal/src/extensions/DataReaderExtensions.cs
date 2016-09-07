@@ -12,16 +12,13 @@ namespace Kangal
         public static IEnumerable<T> ToList<T>(this IDataReader reader) where T :class, new()
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<T>();
-            //var dataTable = new DataTable();
-            //dataTable.Load(reader);
-            //return dataTable.ToList<T>();
             var genericList = new List<T>();
             while (reader.Read() && !reader.IsClosed)
             {
                 var generic = new T();
                 foreach (var property in generic.GetType().GetProperties())
                 {
-                    var customAttributes = property.GetCustomAttributes();
+                    var customAttributes = property.GetCustomAttributes().ToList();
                     var ignoreAttribute = customAttributes.FirstOrDefault(e => e.GetType() == typeof(IgnoreAttribute));
                     if (ignoreAttribute != null) continue;
                     var colomnAttribute =
