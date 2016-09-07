@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using Kangal;
 using Kangal.Attributes;
@@ -16,9 +17,12 @@ namespace ConsoleApplication1
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
+                var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                    var persons = command.ExecuteReader().ToList<Users>();
+                   var reader= command.ExecuteReader();
+                   table.Load(reader);
+                    var aa = table.ToList<Users>();
                 }
             }
             Console.ReadKey();
