@@ -30,9 +30,6 @@ namespace Kangal
 
                     foreach (var property in generic.GetType().GetProperties())
                     {
-                        var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
-                        if (ignoreAttribute != null) break;
-
                         var columnAliasAttribute =
                             property.GetCustomAttributes(typeof(ColumnAliasAttribute), false)
                                 .Cast<ColumnAliasAttribute>()

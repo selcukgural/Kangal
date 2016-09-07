@@ -11,9 +11,9 @@ namespace ConsoleApplication1
     class Program
     {
         private static readonly string m_connectionString =
-            @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=AdventureWorks2014;Integrated Security=true;";
+            @"Data Source=.;Initial Catalog=WebSql;Integrated Security=true;";
 
-        private static readonly string m_query = "select top 5 * from Person.Person;select top 5 * from Person.Address;";
+        private static readonly string m_query = "select t * from USERS;";
         static void Main(string[] args)
         {
             using (var connection = new SqlConnection(m_connectionString))
@@ -21,7 +21,7 @@ namespace ConsoleApplication1
                 connection.Open();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                    var persons = command.ExecuteReader().ToList<Person>().ToDataTable();
+                    var persons = command.ExecuteReader().ToList<Users>();
                 }
             }
             Console.ReadKey();
@@ -29,7 +29,7 @@ namespace ConsoleApplication1
     }
 
 
-    class Person
+    class Users
     {
         [ColumnAlias("FirstName")] 
         public string Name { get; set; }
@@ -38,5 +38,8 @@ namespace ConsoleApplication1
         public string Surname { get; set; }
 
         public byte? Age { get; set; }
+
+        [Ignore]
+        public string Password { get; set; }
     }
 }
