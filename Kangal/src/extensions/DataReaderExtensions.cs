@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
+using Kangal.Attributes;
 
 namespace Kangal
 {
@@ -9,9 +12,39 @@ namespace Kangal
         public static IEnumerable<T> ToList<T>(this IDataReader reader) where T :class, new()
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<T>();
-            var dataTable = new DataTable();
-            dataTable.Load(reader);
-            return dataTable.ToList<T>();
+            //var dataTable = new DataTable();
+            //dataTable.Load(reader);
+            //return dataTable.ToList<T>();
+            var genericList = new List<T>();
+            while (reader.Read() && !reader.IsClosed)
+            {
+                var generic = new T();
+                foreach (var property in generic.GetType().GetProperties())
+                {
+                    var customAttributes = property.GetCustomAttributes();
+                    var ignoreAttribute = customAttributes.FirstOrDefault(e => e.GetType() == typeof(IgnoreAttribute));
+                    if (ignoreAttribute != null) continue;
+                    var colomnAttribute =
+                        (ColumnAliasAttribute)customAttributes.FirstOrDefault(e => e.GetType() == typeof(ColumnAliasAttribute));
+                    var columnName = !string.IsNullOrEmpty(colomnAttribute?.Alias) ? colomnAttribute.Alias : property.Name;
+                    var colomnValue = new object();
+                    try
+                    {
+                        colomnValue = reader[columnName];
+                        property.SetValue(generic, colomnValue, null);
+                    }
+                    catch (Exception ex) when (ex is IndexOutOfRangeException)
+                    {
+                        throw new ArgumentException($"Invalid column name {columnName}");
+                    }
+                    catch
+                    {
+                        throw new ArgumentException($"{colomnValue.GetType().Name} cannot cast {property.PropertyType.FullName}");
+                    }
+                }
+                genericList.Add(generic);
+            }
+            return genericList;
         }
         public static IEnumerable<DataTable> ToDataTable(this IDataReader reader)
         {

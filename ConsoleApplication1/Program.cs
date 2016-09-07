@@ -13,7 +13,7 @@ namespace ConsoleApplication1
         private static readonly string m_connectionString =
             @"Data Source=.;Initial Catalog=WebSql;Integrated Security=true;";
 
-        private static readonly string m_query = "select t * from USERS;";
+        private static readonly string m_query = "select  * from USERS;";
         static void Main(string[] args)
         {
             using (var connection = new SqlConnection(m_connectionString))
@@ -37,7 +37,7 @@ namespace ConsoleApplication1
         [ColumnAlias("LastName")]
         public string Surname { get; set; }
 
-        public byte? Age { get; set; }
+        public string UserName { get; set; }
 
         [Ignore]
         public string Password { get; set; }
