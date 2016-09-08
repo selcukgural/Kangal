@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml.Linq;
 using Kangal.Attributes;
@@ -15,43 +16,38 @@ namespace Kangal
         {
             if (dataTable?.Rows == null || dataTable.Rows.Count == 0) return Enumerable.Empty<T>();
 
-            var rowsCount = dataTable.Rows.Count;
-            var genericList = new List<T>(rowsCount);
+            var genericList = new List<T>(dataTable.Rows.Count);
 
             for (var i = 0; i < dataTable.Rows.Count; i++)
             {
                 var generic = new T();
-
                 for (var j = 0; j < dataTable.Columns.Count; j++)
                 {
                     var columnName = dataTable.Columns[j].ColumnName;
                     if (string.IsNullOrEmpty(columnName)) continue;
-                    var value = dataTable.Rows[i].ItemArray[j];
 
-                    foreach (var property in generic.GetType().GetProperties())
+                    var properties = generic.GetType().GetProperties();
+                    var macthProperty = properties.FirstOrDefault(e => e.Name.Equals(columnName));
+
+                    if (macthProperty != null  && macthProperty.GetCustomAttribute(typeof(IgnoreAttribute)) == null)
                     {
-                        var ignoreAttribute =
-                            property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
-                        if(ignoreAttribute != null) break;
+                        var matchPropertyType = Nullable.GetUnderlyingType(macthProperty.PropertyType) ?? macthProperty.PropertyType;
+                        var columnValue = dataTable.Rows[i][columnName];
+                        macthProperty.SetValue(generic, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, matchPropertyType), null);
+                        break;
+                    }
+                    foreach (var property in properties)
+                    {
+                        var ignoreAttribute = property.GetCustomAttribute(typeof(IgnoreAttribute), false);
+                        if(ignoreAttribute != null) continue;
 
-                        var columnAliasAttribute =
-                            property.GetCustomAttributes(typeof(ColumnAliasAttribute), false)
-                                .Cast<ColumnAliasAttribute>()
-                                .FirstOrDefault(e => e.Alias.Equals(columnName));
+                        var columnAliasAttribute = (ColumnAliasAttribute)property.GetCustomAttribute(typeof(ColumnAliasAttribute), false);
+                        if(columnAliasAttribute == null) continue;
+                        if(!columnAliasAttribute.Alias.Equals(columnName)) continue;
 
-                        if (columnAliasAttribute != null)
-                        {
-                            var propetyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                            property.SetValue(generic, (value == null || value == DBNull.Value) ? null : Convert.ChangeType(value, propetyType),null);
-                            break;
-                        }
-                        var prop =
-                            generic.GetType()
-                                .GetProperties()
-                                .FirstOrDefault(e => e.Name.Equals(columnName, StringComparison.OrdinalIgnoreCase));
-                        if (prop == null || !prop.Name.Equals(columnName)) continue;
-                        var propType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-                        prop.SetValue(generic, (value == null || value == DBNull.Value) ? null : Convert.ChangeType(value, propType),null);
+                        var propetyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        var columnValue = dataTable.Rows[i][columnAliasAttribute.Alias];
+                        property.SetValue(generic, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, propetyType), null);
                         break;
                     }
                 }

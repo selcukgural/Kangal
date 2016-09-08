@@ -18,17 +18,17 @@ namespace Kangal
                 var generic = new T();
                 foreach (var property in generic.GetType().GetProperties())
                 {
-                    var customAttributes = property.GetCustomAttributes().ToList();
-                    var ignoreAttribute = customAttributes.FirstOrDefault(e => e.GetType() == typeof(IgnoreAttribute));
+                    var propertyCustomAttributes = property.GetCustomAttributes().ToList();
+                    var ignoreAttribute = propertyCustomAttributes.FirstOrDefault(e => e.GetType() == typeof(IgnoreAttribute));
                     if (ignoreAttribute != null) continue;
                     var colomnAttribute =
-                        (ColumnAliasAttribute)customAttributes.FirstOrDefault(e => e.GetType() == typeof(ColumnAliasAttribute));
+                        (ColumnAliasAttribute)propertyCustomAttributes.FirstOrDefault(e => e.GetType() == typeof(ColumnAliasAttribute));
                     var columnName = !string.IsNullOrEmpty(colomnAttribute?.Alias) ? colomnAttribute.Alias : property.Name;
-                    var colomnValue = new object();
+                    var columnValue = new object();
                     try
                     {
-                        colomnValue = reader[columnName];
-                        property.SetValue(generic, colomnValue, null);
+                        columnValue = reader[columnName];
+                        property.SetValue(generic, columnValue, null);
                     }
                     catch (Exception ex) when (ex is IndexOutOfRangeException)
                     {
@@ -36,7 +36,7 @@ namespace Kangal
                     }
                     catch
                     {
-                        throw new ArgumentException($"{colomnValue.GetType().Name} cannot cast {property.PropertyType.FullName}");
+                        throw new ArgumentException($"{columnValue.GetType().FullName} cannot cast {property.PropertyType.FullName}");
                     }
                 }
                 genericList.Add(generic);
@@ -49,15 +49,13 @@ namespace Kangal
 
             var tableList = new List<DataTable>();
 
-            while (reader.Read())
+            while (reader.Read() && !reader.IsClosed)
             {
                 var dataTable = new DataTable();
                 dataTable.Load(reader);
                 tableList.Add(dataTable);
-                if (!reader.IsClosed) continue;
-                reader.Dispose();
-                break;
             }
+            reader.Dispose();
             return tableList;
         }
     }

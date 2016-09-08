@@ -9,9 +9,9 @@ namespace ConsoleApplication1
     class Program
     {
         private static readonly string m_connectionString =
-            @"Data Source=.;Initial Catalog=WebSql;Integrated Security=true;";
+            @"Data Source=KABASAKAL\SQLSERVER;Initial Catalog=Test;Integrated Security=true;";
 
-        private static readonly string m_query = "select  * from USERS;";
+        private static readonly string m_query = "select  * from Person;";
         static void Main(string[] args)
         {
             using (var connection = new SqlConnection(m_connectionString))
@@ -20,9 +20,10 @@ namespace ConsoleApplication1
                 var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                   var reader= command.ExecuteReader();
-                   table.Load(reader);
-                    var aa = table.ToList<Users>();
+                   var reader= command.ExecuteReader().ToList<Person>();
+                   //table.Load(reader);
+                   //var aa = table.ToList<Person>();
+
                 }
             }
             Console.ReadKey();
@@ -30,7 +31,7 @@ namespace ConsoleApplication1
     }
 
 
-    class Users
+    class Person
     {
         [ColumnAlias("FirstName")] 
         public string Name { get; set; }
@@ -38,9 +39,7 @@ namespace ConsoleApplication1
         [ColumnAlias("LastName")]
         public string Surname { get; set; }
 
-        public string UserName { get; set; }
-
         [Ignore]
-        public string Password { get; set; }
+        public short Age { get; set; }
     }
 }
