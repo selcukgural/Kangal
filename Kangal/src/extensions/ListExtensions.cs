@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using Kangal.Attributes;
 
 namespace Kangal
@@ -20,6 +21,8 @@ namespace Kangal
             var properties = firstOrDefault.GetType().GetProperties();
             foreach (var property in properties)
             {
+                var ignoreAttribute = property.GetCustomAttribute(typeof(IgnoreAttribute), false);
+                if(ignoreAttribute != null) continue;
                 var columnAlias = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
                 var propertyName = columnAlias?.Alias ?? property.Name;
                 var column = new DataColumn(propertyName,
@@ -28,7 +31,8 @@ namespace Kangal
             }
             foreach (var item in enumerable)
             {
-                var values = item.GetType().GetProperties().Select(property => property.GetValue(item, null)).ToArray();
+                var values = item.GetType().GetProperties().Where(p => p.GetCustomAttribute(typeof(IgnoreAttribute),false) == null).Select(v=> v.GetValue(item,null)).ToArray();
+                //var values = item.GetType().GetProperties().Select(property => property.GetValue(item, null)).ToArray();
                 dataTable.Rows.Add(values);
                 Array.Clear(values, 0, values.Length);
             }

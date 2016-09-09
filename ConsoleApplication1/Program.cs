@@ -20,7 +20,7 @@ namespace ConsoleApplication1
                 var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                   var reader= command.ExecuteReader().ToList<Person>();
+                   var reader= command.ExecuteReader().ToList<Person>().ToDataTable();
                    //table.Load(reader);
                    //var aa = table.ToList<Person>();
 
