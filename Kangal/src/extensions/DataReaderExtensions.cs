@@ -55,7 +55,6 @@ namespace Kangal
                 dataTable.Load(reader);
                 tableList.Add(dataTable);
             }
-            reader.Dispose();
             return tableList;
         }
     }
