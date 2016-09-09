@@ -68,8 +68,7 @@ namespace Kangal
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = query;
-                var reader = command.ExecuteReader();
-                return reader.ToList<T>();
+                return command.ExecuteReader().ToList<T>();
             }
         }
     }
