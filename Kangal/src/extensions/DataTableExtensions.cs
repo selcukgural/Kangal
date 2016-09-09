@@ -16,24 +16,24 @@ namespace Kangal
         {
             if (dataTable?.Rows == null || dataTable.Rows.Count == 0) return Enumerable.Empty<T>();
 
-            var genericList = new List<T>(dataTable.Rows.Count);
+            var entities = new List<T>(dataTable.Rows.Count);
 
             for (var i = 0; i < dataTable.Rows.Count; i++)
             {
-                var generic = new T();
+                var entity = new T();
                 for (var j = 0; j < dataTable.Columns.Count; j++)
                 {
                     var columnName = dataTable.Columns[j].ColumnName;
                     if (string.IsNullOrEmpty(columnName)) continue;
 
-                    var properties = generic.GetType().GetProperties();
+                    var properties = entity.GetType().GetProperties();
                     var macthProperty = properties.FirstOrDefault(e => e.Name.Equals(columnName));
 
                     if (macthProperty != null  && macthProperty.GetCustomAttribute(typeof(IgnoreAttribute)) == null)
                     {
                         var matchPropertyType = Nullable.GetUnderlyingType(macthProperty.PropertyType) ?? macthProperty.PropertyType;
                         var columnValue = dataTable.Rows[i][columnName];
-                        macthProperty.SetValue(generic, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, matchPropertyType), null);
+                        macthProperty.SetValue(entity, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, matchPropertyType), null);
                         break;
                     }
                     foreach (var property in properties)
@@ -47,25 +47,25 @@ namespace Kangal
 
                         var propetyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
                         var columnValue = dataTable.Rows[i][columnAliasAttribute.Alias];
-                        property.SetValue(generic, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, propetyType), null);
+                        property.SetValue(entity, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, propetyType), null);
                         break;
                     }
                 }
-                genericList.Add(generic);
+                entities.Add(entity);
             }
-            return genericList;
+            return entities;
         }
 
-        public static void ChangeColumnName(this DataTable dataTable, string oldName, string newName)
+        public static void ChangeColumnName(this DataTable dataTable, string currentColumnName, string newColumnName)
         {
-            if (string.IsNullOrEmpty(oldName)) throw new ArgumentNullException(nameof(oldName));
-            if (string.IsNullOrEmpty(newName)) throw new ArgumentNullException(nameof(newName));
+            if (string.IsNullOrEmpty(currentColumnName)) throw new ArgumentNullException(nameof(currentColumnName));
+            if (string.IsNullOrEmpty(newColumnName)) throw new ArgumentNullException(nameof(newColumnName));
 
-            if(oldName.Equals(newName)) throw new ArgumentException("old and new column name the same");
+            if(currentColumnName.Equals(newColumnName)) throw new ArgumentException("current and new column name the same");
 
-            var colIndex = dataTable.Columns.IndexOf(oldName);
-            if (colIndex.Equals(-1)) throw new ArgumentNullException(nameof(oldName), "column not found");
-            dataTable.Columns[colIndex].ColumnName = newName;
+            var colIndex = dataTable.Columns.IndexOf(currentColumnName);
+            if (colIndex.Equals(-1)) throw new ArgumentNullException(nameof(currentColumnName), "column not found");
+            dataTable.Columns[colIndex].ColumnName = newColumnName;
             dataTable.AcceptChanges();
         }
 
@@ -84,7 +84,7 @@ namespace Kangal
             if (dataTable == null || dataTable.Rows.Count == 0) throw new ArgumentNullException(nameof(dataTable), "DataTable is null");
 
             comma = string.IsNullOrEmpty(comma) ? ";" : comma;
-            var csv = string.Empty;
+            var csvLine = string.Empty;
             var cvsList = new List<string>();
 
             for (var i = 0; i < dataTable.Rows.Count; i++)
@@ -93,11 +93,11 @@ namespace Kangal
                 {
                     var value = $"{dataTable.Rows[i][j]}";
                     if (string.IsNullOrEmpty(value) && ignoreNull) { continue; }
-                    if (string.IsNullOrEmpty(value) && !ignoreNull){csv += $"NULL{comma}";}
-                    if (!string.IsNullOrEmpty(value)) { csv += value + comma;}
+                    if (string.IsNullOrEmpty(value) && !ignoreNull){csvLine += $"NULL{comma}";}
+                    if (!string.IsNullOrEmpty(value)) { csvLine += value + comma;}
                 }
-                cvsList.Add(csv.Remove(csv.Length - 1));
-                csv = string.Empty;
+                cvsList.Add(csvLine.Remove(csvLine.Length - 1));
+                csvLine = string.Empty;
             }
             return string.Join("\n", cvsList);
         }

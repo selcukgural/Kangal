@@ -17,6 +17,13 @@ namespace ConsoleApplication1
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
+                var sqlTransaction = connection.BeginTransaction();
+                var affect = connection.Save(new Person
+                {
+                    Name = "ahmet",
+                    Age = 15,
+                    Surname = "test"
+                },sqlTransaction);
                 var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {

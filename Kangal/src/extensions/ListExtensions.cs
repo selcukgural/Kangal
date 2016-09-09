@@ -9,30 +9,29 @@ namespace Kangal
 {
     public static class ListExtensions
     {
-        public static DataTable ToDataTable<T>(this IEnumerable<T> list) where T : class
+        public static DataTable ToDataTable<T>(this IEnumerable<T> entityList) where T : class
         {
             var dataTable = new DataTable();
-            var enumerable = list as IList<T> ?? list.ToList();
-            if (!enumerable.Any()) return dataTable;
+            var entities = entityList as IList<T> ?? entityList.ToList();
+            if (!entities.Any()) return dataTable;
 
-            var firstOrDefault = enumerable.FirstOrDefault();
-            if (firstOrDefault == null) throw new ArgumentNullException(nameof(list));
+            var firstEntity = entities.FirstOrDefault();
+            if (firstEntity == null) throw new ArgumentNullException(nameof(entityList));
 
-            var properties = firstOrDefault.GetType().GetProperties();
+            var properties = firstEntity.GetType().GetProperties();
             foreach (var property in properties)
             {
                 var ignoreAttribute = property.GetCustomAttribute(typeof(IgnoreAttribute), false);
                 if(ignoreAttribute != null) continue;
-                var columnAlias = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
+                var columnAlias = (ColumnAliasAttribute)property.GetCustomAttribute(typeof(ColumnAliasAttribute), false);
                 var propertyName = columnAlias?.Alias ?? property.Name;
                 var column = new DataColumn(propertyName,
                     property.PropertyType.Name.Contains("Nullable") ? typeof(object) : property.PropertyType);
                 dataTable.Columns.Add(column);
             }
-            foreach (var item in enumerable)
+            foreach (var entity in entities)
             {
-                var values = item.GetType().GetProperties().Where(p => p.GetCustomAttribute(typeof(IgnoreAttribute),false) == null).Select(v=> v.GetValue(item,null)).ToArray();
-                //var values = item.GetType().GetProperties().Select(property => property.GetValue(item, null)).ToArray();
+                var values = entity.GetType().GetProperties().Where(e => e.GetCustomAttribute(typeof(IgnoreAttribute),false) == null).Select(e=> e.GetValue(entity,null)).ToArray();
                 dataTable.Rows.Add(values);
                 Array.Clear(values, 0, values.Length);
             }
@@ -44,15 +43,16 @@ namespace Kangal
             var queries = new List<string>();
             foreach (var entity in entities)
             {
-                var tableAtt = (TableNameAttribute)entity.GetType().GetCustomAttributes(typeof(TableNameAttribute), false).FirstOrDefault();
-                tableName = string.IsNullOrEmpty(tableName) ? Helpers.TableNameHelper.GetTableName(entity, tableAtt) : tableName;
+                var tableNameAttribute =
+                    (TableNameAttribute) entity.GetType().GetCustomAttribute(typeof(TableNameAttribute), false);
+                tableName = string.IsNullOrEmpty(tableName) ? Helpers.TableNameHelper.GetTableName(entity, tableNameAttribute) : tableName;
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
-                    var ignoreAtt = (IgnoreAttribute)property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
-                    if(ignoreAtt != null) continue;
-                    var columnAtt = (ColumnAliasAttribute)property.GetCustomAttributes(typeof(ColumnAliasAttribute), false).FirstOrDefault();
-                    var columnName = string.IsNullOrEmpty(columnAtt?.Alias) ? property.Name : columnAtt.Alias;
+                    var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
+                    if(ignoreAttribute != null) continue;
+                    var columnAliasAttribute = (ColumnAliasAttribute)property.GetCustomAttribute(typeof(ColumnAliasAttribute), false);
+                    var columnName = string.IsNullOrEmpty(columnAliasAttribute?.Alias) ? property.Name : columnAliasAttribute.Alias;
                     if (columnWithValues.ContainsKey(columnName))
                     {
                         throw new ArgumentException($"This column name already exists: {columnName}");

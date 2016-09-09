@@ -12,11 +12,11 @@ namespace Kangal
         public static IEnumerable<T> ToList<T>(this IDataReader reader) where T :class, new()
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<T>();
-            var genericList = new List<T>();
+            var entities = new List<T>();
             while (reader.Read() && !reader.IsClosed)
             {
-                var generic = new T();
-                foreach (var property in generic.GetType().GetProperties())
+                var entity = new T();
+                foreach (var property in entity.GetType().GetProperties())
                 {
                     var propertyCustomAttributes = property.GetCustomAttributes().ToList();
                     var ignoreAttribute = propertyCustomAttributes.FirstOrDefault(e => e.GetType() == typeof(IgnoreAttribute));
@@ -28,7 +28,7 @@ namespace Kangal
                     try
                     {
                         columnValue = reader[columnName];
-                        property.SetValue(generic, columnValue, null);
+                        property.SetValue(entity, columnValue, null);
                     }
                     catch (Exception ex) when (ex is IndexOutOfRangeException)
                     {
@@ -39,9 +39,9 @@ namespace Kangal
                         throw new ArgumentException($"{columnValue.GetType().FullName} cannot cast {property.PropertyType.FullName}");
                     }
                 }
-                genericList.Add(generic);
+                entities.Add(entity);
             }
-            return genericList;
+            return entities;
         }
         public static IEnumerable<DataTable> ToDataTable(this IDataReader reader)
         {
