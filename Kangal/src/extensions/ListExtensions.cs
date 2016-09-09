@@ -49,7 +49,7 @@ namespace Kangal
 
                 foreach (var property in entity.GetType().GetProperties())
                 {
-                    var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttributes(typeof(IgnoreAttribute), false).FirstOrDefault();
+                    var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttribute(typeof(IgnoreAttribute), false);
                     if(ignoreAttribute != null) continue;
                     var columnAliasAttribute = (ColumnAliasAttribute)property.GetCustomAttribute(typeof(ColumnAliasAttribute), false);
                     var columnName = string.IsNullOrEmpty(columnAliasAttribute?.Alias) ? property.Name : columnAliasAttribute.Alias;
