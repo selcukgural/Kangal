@@ -44,7 +44,7 @@
     <Compile Include="src\attributes\Attributes.cs" />
     <Compile Include="src\extensions\DataReaderExtensions.cs" />
     <Compile Include="src\extensions\DataTableExtensions.cs" />
-    <Compile Include="src\Helpers.cs" />
+    <Compile Include="src\internal\Helpers.cs" />
     <Compile Include="src\JsonFormatSettings.cs" />
     <Compile Include="src\extensions\ListExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
