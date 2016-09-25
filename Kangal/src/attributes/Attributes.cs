@@ -3,14 +3,14 @@
 namespace Kangal.Attributes
 {
     /// <summary>
-    /// İlgili property yada field görmezden gelinir. Herhangi bir işlem yapılmaz.
+    /// Ignoring property or field
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     
     public class IgnoreAttribute : Attribute{}
 
     /// <summary>
-    /// Default property yada field adını görmezden gelir. Yerine Alias ile işlem yapılır.
+    /// Change property or field name with alias
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
     public class ColumnAliasAttribute : Attribute
@@ -24,7 +24,7 @@ namespace Kangal.Attributes
     }
 
     /// <summary>
-    /// Belirtilen TabloAdı ile işlem yapılır.
+    /// Set Table name
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class TableNameAttribute : Attribute
