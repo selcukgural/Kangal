@@ -60,7 +60,6 @@ namespace Kangal
         {
             if (string.IsNullOrEmpty(currentColumnName)) throw new ArgumentNullException(nameof(currentColumnName));
             if (string.IsNullOrEmpty(newColumnName)) throw new ArgumentNullException(nameof(newColumnName));
-
             if(currentColumnName.Equals(newColumnName)) throw new ArgumentException("current and new column name the same");
 
             var colIndex = dataTable.Columns.IndexOf(currentColumnName);

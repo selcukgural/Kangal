@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
@@ -50,6 +49,7 @@ namespace Kangal
         {
             if (string.IsNullOrEmpty(rootName)) throw new ArgumentNullException(nameof(rootName));
             if (string.IsNullOrEmpty(nodeName)) throw new ArgumentNullException(nameof(nodeName));
+
             var xDocument = new XDocument(new XElement(rootName));
             while (reader.Read())
             {
