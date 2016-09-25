@@ -17,19 +17,17 @@ namespace ConsoleApplication1
             using (var connection = new SqlConnection(m_connectionString))
             {
                 connection.Open();
-                var sqlTransaction = connection.BeginTransaction();
-                var affect = connection.Save(new Person
-                {
-                    Name = "ahmet",
-                    Age = 15,
-                    Surname = "test"
-                },sqlTransaction);
-                var table = new DataTable();
+                //var sqlTransaction = connection.BeginTransaction();
+                //var affect = connection.Save(new Person
+                //{
+                //    Name = "ahmet",
+                //    Age = 15,
+                //    Surname = "test"
+                //},sqlTransaction);
+                //var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                   var reader= command.ExecuteReader().ToList<Person>().ToDataTable();
-                   //table.Load(reader);
-                   //var aa = table.ToList<Person>();
+                    var reader = command.ExecuteReader().ToXDocument("persons", "person");
 
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Kangal.Attributes;
 
 namespace Kangal
@@ -36,6 +37,29 @@ namespace Kangal
                 Array.Clear(values, 0, values.Length);
             }
             return dataTable;
+        }
+
+        public static XDocument ToXDocument<T>(this IEnumerable<T> entities,string rootName) where T : class
+        {
+            if (string.IsNullOrEmpty(rootName)) throw new ArgumentNullException(nameof(rootName));
+
+            var xDocument = new XDocument();
+            var nodeName = typeof(T).Name;
+            xDocument.Add(new XElement(rootName));
+            foreach (var entity in entities)
+            {
+                var xElement = new XElement(nodeName);
+                foreach (var property in entity.GetType().GetProperties())
+                {
+                    var ignoreAttribute = (IgnoreAttribute)property.GetCustomAttribute(typeof(IgnoreAttribute), false);
+                    if (ignoreAttribute != null) continue;
+                    var columnAliasAttribute = (ColumnAliasAttribute)property.GetCustomAttribute(typeof(ColumnAliasAttribute), false);
+                    var columnName = string.IsNullOrEmpty(columnAliasAttribute?.Alias) ? property.Name : columnAliasAttribute.Alias;
+                    xElement.Add(new XElement(columnName, property.GetValue(entity, null)));
+                }
+                xDocument.Root?.Add(xElement);
+            }
+            return xDocument;
         }
         internal static string MakeMeSaveQuery<T>(this IEnumerable<T> entities, string tableName = null) where T : class
         {

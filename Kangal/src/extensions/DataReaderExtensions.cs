@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 using Kangal.Attributes;
 
 namespace Kangal
@@ -42,6 +44,24 @@ namespace Kangal
                 entities.Add(entity);
             }
             return entities;
+        }
+
+        public static XDocument ToXDocument(this IDataReader reader,string rootName,string nodeName)
+        {
+            if (string.IsNullOrEmpty(rootName)) throw new ArgumentNullException(nameof(rootName));
+            if (string.IsNullOrEmpty(nodeName)) throw new ArgumentNullException(nameof(nodeName));
+            var xDocument = new XDocument(new XElement(rootName));
+            while (reader.Read())
+            {
+                var xElement = new XElement(nodeName);
+                for (var i = 0; i < reader.FieldCount; i++)
+                {
+                    if(reader.IsDBNull(i)) continue;
+                    xElement.Add(new XElement(reader.GetName(i), reader[i]));
+                }
+                xDocument.Root?.Add(xElement);
+            }
+            return xDocument;
         }
         public static IEnumerable<DataTable> ToDataTable(this IDataReader reader)
         {

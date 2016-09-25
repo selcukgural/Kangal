@@ -112,7 +112,6 @@ namespace Kangal
                 return XDocument.Parse(stringWriter.ToString());
             }
         }
-
         public static string ToJson(this DataTable dataTable,JsonFormat jsonFormat = JsonFormat.Simple,JsonFormatSettings jsonFormatSettings = null)
         {
             var builder = new StringBuilder();
