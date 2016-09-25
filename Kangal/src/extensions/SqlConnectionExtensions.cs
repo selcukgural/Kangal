@@ -31,6 +31,10 @@ namespace Kangal
                 if (transaction != null) command.Transaction.Rollback();
                 return 0;
             }
+            finally
+            {
+                command.Dispose();
+            }
         }
 
         public static int Save<T>(this SqlConnection connection, T entity, SqlTransaction transaction = null, string tableName = null) where T : class
@@ -60,6 +64,10 @@ namespace Kangal
                 if (transaction != null) command.Transaction.Rollback();
                 return 0;
             }
+            finally
+            {
+                command.Dispose();
+            }
         }
 
         public static IEnumerable<T> Get<T>(this SqlConnection connection,string query) where T : class ,new ()
@@ -67,8 +75,19 @@ namespace Kangal
             if (string.IsNullOrEmpty(query)) throw new ArgumentNullException(nameof(query));
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = query;
-                return command.ExecuteReader().ToList<T>();
+                try
+                {
+                    command.CommandText = query;
+                    return command.ExecuteReader().ToList<T>();
+                }
+                catch
+                {
+                    return Enumerable.Empty<T>();
+                }
+                finally
+                {
+                    command.Dispose();
+                }
             }
         }
     }

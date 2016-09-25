@@ -55,18 +55,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="extensions\DataReaderExtensionsUnitTests.cs" />
-    <Compile Include="Employee.cs" />
-    <Compile Include="extensions\DataTableExtensionsUnitTests.cs" />
-    <Compile Include="extensions\ListExtensionsUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kangal\Kangal.csproj">
       <Project>{7071e946-958d-45e5-bbef-64a727b7d646}</Project>
       <Name>Kangal</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="extensions\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

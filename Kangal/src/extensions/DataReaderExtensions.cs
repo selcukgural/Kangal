@@ -49,11 +49,14 @@ namespace Kangal
 
             var tableList = new List<DataTable>();
 
-            while (reader.Read() && !reader.IsClosed)
+            while (reader.Read())
             {
                 var dataTable = new DataTable();
                 dataTable.Load(reader);
                 tableList.Add(dataTable);
+                if (!reader.IsClosed) continue;
+                reader.Close();
+                break;
             }
             return tableList;
         }
