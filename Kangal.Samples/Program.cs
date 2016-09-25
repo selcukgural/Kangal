@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
-using Kangal;
 using Kangal.Attributes;
 
-namespace ConsoleApplication1
+namespace Kangal.Samples
 {
     class Program
     {

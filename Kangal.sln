@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal", "Kangal\Kangal.csproj", "{7071E946-958D-45E5-BBEF-64A727B7D646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApplication1", "ConsoleApplication1\ConsoleApplication1.csproj", "{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal.Samples", "Kangal.Samples\Kangal.Samples.csproj", "{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
