@@ -96,7 +96,7 @@ namespace Kangal
         /// DataTable's content convert to csv formatted string.
         /// </summary>
         /// <param name="dataTable">DataTable</param>
-        /// <param name="comma">Comma</param>
+        /// <param name="comma">Default ";"</param>
         /// <param name="ignoreNull">ignore null values</param>
         /// <returns>Csv formatted string</returns>
         public static string ToCsv(this DataTable dataTable, string comma = null,bool ignoreNull = false)
