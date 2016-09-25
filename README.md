@@ -17,6 +17,7 @@ dataTable.Rows.Add("selçuk", "güral", 35);
 dataTable.Rows.Add("songül", "güral", 30);
 dataTable.Rows.Add("zeynep sare", "güral", 1);
 dataTable.AcceptChanges();
+
 using (var connection = new SqlConnection(connectionString))
 {
     connection.Open();
