@@ -10,6 +10,12 @@ namespace Kangal
 {
     public static class ListExtensions
     {
+        /// <summary>
+        /// The Generic List convert to DataTable
+        /// </summary>
+        /// <typeparam name="T">Generic Type</typeparam>
+        /// <param name="entityList">Entities</param>
+        /// <returns>DataTable</returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> entityList) where T : class
         {
             var dataTable = new DataTable();
@@ -38,7 +44,13 @@ namespace Kangal
             }
             return dataTable;
         }
-
+        /// <summary>
+        /// The Entities convert to XDocument.
+        /// </summary>
+        /// <typeparam name="T">Generic Type</typeparam>
+        /// <param name="entities">Entities</param>
+        /// <param name="rootName">Root name</param>
+        /// <returns>XDocument</returns>
         public static XDocument ToXDocument<T>(this IEnumerable<T> entities,string rootName) where T : class
         {
             if (string.IsNullOrEmpty(rootName)) throw new ArgumentNullException(nameof(rootName));

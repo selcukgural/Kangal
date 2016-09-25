@@ -4,6 +4,11 @@ namespace Kangal
 {
     internal static class ObjectExtensions
     {
+        /// <summary>
+        /// Return Sql Value with or without quato
+        /// </summary>
+        /// <param name="value">column value</param>
+        /// <returns>Object</returns>
         public static object ToSqlString(this object value)
         {
             if (value == DBNull.Value || value == null) return "NULL";

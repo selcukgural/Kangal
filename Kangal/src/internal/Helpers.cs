@@ -8,9 +8,9 @@ namespace Kangal
         {
             internal static string GetTableName(object entity,TableNameAttribute tableNameAttribute = null)
             {
-                return string.IsNullOrEmpty(tableNameAttribute?.Name)
+                return string.IsNullOrEmpty(tableNameAttribute?.TableName)
                     ? entity.GetType().Name
-                    : tableNameAttribute.Name;
+                    : tableNameAttribute.TableName;
             }
         }
     }

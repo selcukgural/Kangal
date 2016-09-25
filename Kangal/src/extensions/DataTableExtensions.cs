@@ -12,6 +12,12 @@ namespace Kangal
 {
     public static class DataTableExtensions
     {
+        /// <summary>
+        /// In the DataTable records returns back as IEnumerable&lt;T&gt;
+        /// </summary>
+        /// <typeparam name="T">Generic Type</typeparam>
+        /// <param name="dataTable">DataTable</param>
+        /// <returns>IEnumerable&lt;T&gt;</returns>
         public static IEnumerable<T> ToList<T>(this DataTable dataTable) where T : new()
         {
             if (dataTable?.Rows == null || dataTable.Rows.Count == 0) return Enumerable.Empty<T>();
@@ -55,7 +61,12 @@ namespace Kangal
             }
             return entities;
         }
-
+        /// <summary>
+        /// DataTable's change column name.
+        /// </summary>
+        /// <param name="dataTable">DataTable</param>
+        /// <param name="currentColumnName">Old column name</param>
+        /// <param name="newColumnName">New column name</param>
         public static void ChangeColumnName(this DataTable dataTable, string currentColumnName, string newColumnName)
         {
             if (string.IsNullOrEmpty(currentColumnName)) throw new ArgumentNullException(nameof(currentColumnName));
@@ -67,7 +78,11 @@ namespace Kangal
             dataTable.Columns[colIndex].ColumnName = newColumnName;
             dataTable.AcceptChanges();
         }
-
+        /// <summary>
+        /// Removes the column.
+        /// </summary>
+        /// <param name="dataTable">DataTable</param>
+        /// <param name="columnName">The name of the column to be removed</param>
         public static void RemoveColumn(this DataTable dataTable, string columnName)
         {
             if(string.IsNullOrEmpty(columnName)) throw new ArgumentNullException(nameof(columnName));
@@ -77,7 +92,13 @@ namespace Kangal
             dataTable.Columns.RemoveAt(colIndex);
             dataTable.AcceptChanges();
         }
-
+        /// <summary>
+        /// DataTable's content convert to csv formatted string.
+        /// </summary>
+        /// <param name="dataTable">DataTable</param>
+        /// <param name="comma">Comma</param>
+        /// <param name="ignoreNull">ignore null values</param>
+        /// <returns>Csv formatted string</returns>
         public static string ToCsv(this DataTable dataTable, string comma = null,bool ignoreNull = false)
         {
             if (dataTable == null || dataTable.Rows.Count == 0) throw new ArgumentNullException(nameof(dataTable), "DataTable is null");
@@ -100,7 +121,14 @@ namespace Kangal
             }
             return string.Join("\n", cvsList);
         }
-
+        /// <summary>
+        /// DataTable's content convert to XDocument.
+        /// </summary>
+        /// <param name="dataTable">DataTable</param>
+        /// <param name="xmlWriteMode">XmlWriteMode</param>
+        /// <param name="nodeName">Node name</param>
+        /// <param name="writeHierarchy">writeHierarchy</param>
+        /// <returns>XDocument</returns>
         public static XDocument ToXDocument(this DataTable dataTable,XmlWriteMode xmlWriteMode = XmlWriteMode.IgnoreSchema,string nodeName = null,bool writeHierarchy = true)
         {
             if (dataTable == null || dataTable.Rows.Count == 0) throw new ArgumentNullException(nameof(dataTable), "DataTable is null");
@@ -111,6 +139,13 @@ namespace Kangal
                 return XDocument.Parse(stringWriter.ToString());
             }
         }
+        /// <summary>
+        /// DataTable's content convert to Json.
+        /// </summary>
+        /// <param name="dataTable">DataTable</param>
+        /// <param name="jsonFormat">Json Format</param>
+        /// <param name="jsonFormatSettings">Json Settings</param>
+        /// <returns>Json string</returns>
         public static string ToJson(this DataTable dataTable,JsonFormat jsonFormat = JsonFormat.Simple,JsonFormatSettings jsonFormatSettings = null)
         {
             var builder = new StringBuilder();

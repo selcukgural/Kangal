@@ -10,6 +10,12 @@ namespace Kangal
 {
     public static class DataReaderExtensions
     {
+        /// <summary>
+        /// In the records IDataReader object returns back as generic list 
+        /// </summary>
+        /// <typeparam name="T">Generic Type</typeparam>
+        /// <param name="reader">IDataReader</param>
+        /// <returns>IEnumerable<T/></returns>
         public static IEnumerable<T> ToList<T>(this IDataReader reader) where T :class, new()
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<T>();
@@ -45,6 +51,13 @@ namespace Kangal
             return entities;
         }
 
+        /// <summary>
+        /// In the records IDataReader object returns back as XDocument
+        /// </summary>
+        /// <param name="reader">IDataReader</param>
+        /// <param name="rootName">Root name</param>
+        /// <param name="nodeName">Node name</param>
+        /// <returns>ToXDocument</returns>
         public static XDocument ToXDocument(this IDataReader reader,string rootName,string nodeName)
         {
             if (string.IsNullOrEmpty(rootName)) throw new ArgumentNullException(nameof(rootName));
@@ -63,6 +76,11 @@ namespace Kangal
             }
             return xDocument;
         }
+        /// <summary>
+        /// In the records IDataReader object returns back as IEnumerable&lt;DataTable&gt; 
+        /// </summary>
+        /// <param name="reader">IDataReader</param>
+        /// <returns>IEnumerable&lt;DataTable&gt;</returns>
         public static IEnumerable<DataTable> ToDataTable(this IDataReader reader)
         {
             if (reader == null || reader.FieldCount == 0) return Enumerable.Empty<DataTable>();

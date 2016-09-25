@@ -2,11 +2,17 @@
 
 namespace Kangal
 {
+    /// <summary>
+    /// Json Format
+    /// </summary>
     public enum JsonFormat
     {
         Simple = 1,
         Showy =2
     }
+    /// <summary>
+    /// Json Data Types Format Settings
+    /// </summary>
     public class JsonFormatSettings
     {
         public string DateTimeFormat { get; set; }

@@ -25,7 +25,7 @@ namespace Kangal.Samples
                 //var table = new DataTable();
                 using (var command = new SqlCommand(m_query, connection))
                 {
-                    var reader = command.ExecuteReader().ToXDocument("persons", "person");
+                    var reader = command.ExecuteReader().ToDataTable();
 
                 }
             }
