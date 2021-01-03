@@ -4,9 +4,9 @@ Hemen hemen her projede kullanmak durumunda kaldığım kendimce yararlı olduğ
 
 Projenin başka bir kütüphaneye bağımlılığı yoktur.
 
-###SqlConnection
+### SqlConnection
 
-#####Save(this SqlConnection connection, DataTable dataTable, string tableName,SqlTransaction transaction = null)
+##### Save(this SqlConnection connection, DataTable dataTable, string tableName,SqlTransaction transaction = null)
 DataTable içerisindeki kayıtları veritabanına kayıt eder ve geriye kayıt sayısını döner.
 ```csharp
 var dataTable = new DataTable();
@@ -25,7 +25,7 @@ using (var connection = new SqlConnection(connectionString))
 }
 ```
 
-#####Save<T>(this SqlConnection connection, T entity, SqlTransaction transaction = null, string tableName = null) where T : class
+##### Save<T>(this SqlConnection connection, T entity, SqlTransaction transaction = null, string tableName = null) where T : class
 POCO nesnesini veritabanına kayıt eder.
 ```csharp
 var person = new Person("zeynep sare","güral",1)
@@ -36,7 +36,7 @@ using (var connection = new SqlConnection(connectionString))
 }
 ```
 
-#####Save<T>(this SqlConnection connection, IEnumerable<T> entities,SqlTransaction transaction = null, string tableName = null) where T : class
+##### Save<T>(this SqlConnection connection, IEnumerable<T> entities,SqlTransaction transaction = null, string tableName = null) where T : class
 POCO nesnesini veritabanına kayıt eder.
 ```csharp
 var persons = new List<Person>
