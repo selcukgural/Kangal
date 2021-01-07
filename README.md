@@ -1,4 +1,4 @@
-﻿# Kangal ![Logo](https://github.com/selcukgural/Kangal/blob/master/Kangal/images/32x.png)
+﻿# Kangal  ![Logo](https://github.com/selcukgural/Kangal/blob/master/Kangal/images/24x.png)
 
 Kangal is `extension` library for data operations. Like `DataReader`, `SqlConnection` or `DataTable`.
 
