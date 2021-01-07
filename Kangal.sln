@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal", "Kangal\Kangal.csproj", "{7071E946-958D-45E5-BBEF-64A727B7D646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal.Samples", "Kangal.Samples\Kangal.Samples.csproj", "{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal_", "Kangal_\Kangal_.csproj", "{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +17,15 @@ Global
 		{7071E946-958D-45E5-BBEF-64A727B7D646}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7071E946-958D-45E5-BBEF-64A727B7D646}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7071E946-958D-45E5-BBEF-64A727B7D646}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE746C2E-3EFE-4E9E-8CDA-D4D2DE34775E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8382A170-7452-499A-9F94-14DE253CFC41}
 	EndGlobalSection
 EndGlobal
