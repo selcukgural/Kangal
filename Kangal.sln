@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal", "Kangal\Kangal.csproj", "{7071E946-958D-45E5-BBEF-64A727B7D646}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal_", "Kangal_\Kangal_.csproj", "{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kangal", "Kangal\Kangal.csproj", "{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,10 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7071E946-958D-45E5-BBEF-64A727B7D646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7071E946-958D-45E5-BBEF-64A727B7D646}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7071E946-958D-45E5-BBEF-64A727B7D646}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7071E946-958D-45E5-BBEF-64A727B7D646}.Release|Any CPU.Build.0 = Release|Any CPU
 		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{008588C9-EBE4-4F4A-97FA-6030A3F79BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU

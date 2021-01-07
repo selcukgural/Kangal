@@ -13,7 +13,7 @@ namespace Kangal
     public static class DataTableExtensions
     {
         /// <summary>
-        /// In the DataTable records returns back as IEnumerable&lt;T&gt;
+        /// In the DataTable records returns back as IEnumerable<T>
         /// </summary>
         /// <typeparam name="T">Generic Type</typeparam>
         /// <param name="dataTable">DataTable</param>
@@ -51,9 +51,9 @@ namespace Kangal
                         if(columnAliasAttribute == null) continue;
                         if(!columnAliasAttribute.Alias.Equals(columnName)) continue;
 
-                        var propetyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                        var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
                         var columnValue = dataTable.Rows[i][columnAliasAttribute.Alias];
-                        property.SetValue(entity, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, propetyType), null);
+                        property.SetValue(entity, (columnValue == null || columnValue == DBNull.Value) ? null : Convert.ChangeType(columnValue, propertyType), null);
                         break;
                     }
                 }

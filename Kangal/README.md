@@ -5,6 +5,94 @@ Kangal is `extension` library for data operations. Like `DataReader`, `SqlConnec
 The project has no dependence.
 
 # Some Features
+#### DataTable
+ In the `DataTable` records returns back as `IEnumerable<T>`
+```csharp
+public static IEnumerable<T> ToList<T>(this DataTable dataTable) where T : new()
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    return dataTable.ToList<Person>();
+}
+```
+<br>`DataTable`'s content convert to **Csv** formatted string.
+```csharp
+public static string ToCsv(this DataTable dataTable, string comma = null,bool ignoreNull = false)
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    return dataTable.ToCsv("-", true);
+}
+```
+<br>`DataTable`'s content convert to `XDocument`.
+```csharp
+public static XDocument ToXDocument(this DataTable dataTable,XmlWriteMode xmlWriteMode = XmlWriteMode.IgnoreSchema,string nodeName = null,bool writeHierarchy = true)
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    return dataTable.ToXDocument(xmlWriteMode: XmlWriteMode.WriteSchema, nodeName: "persons",
+        writeHierarchy: false);
+}
+```
+<br>`DataTable`'s content convert to `Json`.
+```csharp
+public static string ToJson(this DataTable dataTable,JsonFormat jsonFormat = JsonFormat.Simple,JsonFormatSettings jsonFormatSettings = null)
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    return dataTable.ToJson(JsonFormat.Showy, new JsonFormatSettings("dd/MM/yyyy", "0:00.0"));
+}
+```
+<br>You can change `DataTable` column name.
+```csharp
+public static void ChangeColumnName(this DataTable dataTable, string currentColumnName, string newColumnName)
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    dataTable.ChangeColumnName("FirstName", "NickName");
+}
+```
+<br>You can remove `DataTable` column
+```csharp
+public static void RemoveColumn(this DataTable dataTable, string columnName)
+```
+```csharp
+using (var connection = new SqlConnection(connectionString))
+{
+    connection.Open();
+    var dataTable = new DataTable();
+    var reader = new SqlCommand(query, connection).ExecuteReader();
+    dataTable.Load(reader);
+    dataTable.RemoveColumn("FirstName");
+}
+```
+
+#
 #### SqlConnection
 
 
