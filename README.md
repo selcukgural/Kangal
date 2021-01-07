@@ -4,8 +4,9 @@ Kangal is `extension` library for data operations. Like `DataReader`, `SqlConnec
 
 The project has no dependence.
 
-![Nuget library](https://www.nuget.org/packages/Kangal)
-<br>`Install-Package Kangal`
+[Nuget library](https://www.nuget.org/packages/Kangal)
+<br>
+`Install-Package Kangal`
 
 # Some Features
 #### DataTable
