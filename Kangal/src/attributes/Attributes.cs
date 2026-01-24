@@ -1,39 +1,65 @@
 ﻿using System;
 
-namespace Kangal.Attributes
+namespace Kangal;
+
+/// <summary>
+/// Specifies that a property or field should be ignored during data mapping operations.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
+    
+public sealed class IgnoreAttribute : Attribute;
+
+/// <summary>
+/// Specifies an alias for a property or field to map it to a different column name.
+/// This attribute is used to customize column mappings for properties or fields
+/// when interacting with data sources, such as databases or data tables.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public sealed class ColumnAliasAttribute : Attribute
 {
     /// <summary>
-    /// Ignoring property or field
+    /// Gets the alias name associated with a property or field.
+    /// The alias can be used to map the property or field to a different name,
+    /// such as a database column name or an alternative identifier.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    
-    public class IgnoreAttribute : Attribute{}
+    public string Alias { get; }
 
     /// <summary>
-    /// Change property or field name with alias
+    /// Attribute used to define an alias for a property or field.
+    /// This can be used to map a property or field to a different name,
+    /// particularly useful for serialization or mapping scenarios.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class ColumnAliasAttribute : Attribute
+    public ColumnAliasAttribute(string alias)
     {
-        public string Alias { get;  private set; }
-        public ColumnAliasAttribute(string alias)
-        {
-            if(string.IsNullOrEmpty(alias)) throw new ArgumentNullException(nameof(alias));
-            this.Alias = alias;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(alias);
+        
+        Alias = alias;
     }
+}
+
+/// <summary>
+/// Specifies the database table name associated with a class.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class)]
+public sealed class TableNameAttribute : Attribute
+{
+    /// <summary>
+    /// Represents the name of the table associated with a class or entity.
+    /// This property is used to specify a custom table name for the associated entity,
+    /// and it is utilized by various operations such as data table conversions or
+    /// XML document generation to determine the table name.
+    /// </summary>
+    public string TableName { get;  }
 
     /// <summary>
-    /// Set Table name
+    /// Specifies the table name for a class when converting its instances to a data format such as a DataTable.
+    /// This attribute is applied at the class level and ensures that the specified table name
+    /// is used during the conversion process.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class)]
-    public class TableNameAttribute : Attribute
+    public TableNameAttribute(string tableName)
     {
-        public string TableName { get; private set; }
-        public TableNameAttribute(string tableName)
-        {
-            if (string.IsNullOrEmpty(tableName)) throw new ArgumentNullException(nameof(tableName));
-            this.TableName = tableName;
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(tableName);
+            
+        TableName = tableName;
     }
 }
